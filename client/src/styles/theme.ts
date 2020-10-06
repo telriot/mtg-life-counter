@@ -17,6 +17,12 @@ const theme: DefaultTheme = {
       secondary: "#fd85ff",
       tertiary: "#6e6e6e",
     },
+    players: {
+      p0: "#F8E067",
+      p1: "#40C035",
+      p2: "#4E91F6",
+      p3: "#CA4DA7",
+    },
   },
   typography: {
     h1: {

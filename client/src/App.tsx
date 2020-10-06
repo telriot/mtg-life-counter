@@ -2,10 +2,13 @@ import React from "react";
 import ActiveRoom from "./components/ActiveRoom";
 import CreateRoomForm from "./components/CreateRoomForm";
 import LandingScreen from "./components/LandingScreen";
+import CreateRoomScreen from "./components/CreateRoomScreen";
 import RoomList from "./components/RoomList";
 import Rooms from "./components/Rooms";
 import { useAppState } from "./contexts/appContext";
 import { useSocketState } from "./contexts/socketContext";
+import ActiveRoomScreen from "./components/ActiveRoomScreen";
+import PreferencesScreen from "./components/PreferencesScreen";
 function App() {
   const socketState = useSocketState();
   const { activeTab } = useAppState();
@@ -14,9 +17,11 @@ function App() {
       {activeTab === 1 ? (
         <LandingScreen />
       ) : activeTab === 2 ? (
-        <div></div>
+        <PreferencesScreen />
       ) : activeTab === 3 ? (
-        <div></div>
+        <ActiveRoomScreen />
+      ) : activeTab === 4 ? (
+        <CreateRoomScreen />
       ) : (
         <div></div>
       )}

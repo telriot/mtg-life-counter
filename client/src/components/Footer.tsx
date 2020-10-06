@@ -2,7 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Home3, Stack, Exit } from "@styled-icons/icomoon";
 import { StyledIconBase } from "@styled-icons/styled-icon";
-
+import { useAppDispatch } from "../contexts/appContext";
+import IconButton from "./IconButton";
 export const IconStyleWrapper = styled.div`
   ${StyledIconBase} {
     color: white;
@@ -21,12 +22,22 @@ const StyledFooter = styled.footer`
 `;
 
 function Footer() {
+  const dispatch = useAppDispatch();
+  const handleClick = (num: number) => () => {
+    dispatch({ type: "setActiveTab", payload: num });
+  };
   return (
     <IconStyleWrapper>
       <StyledFooter>
-        <Home3 size={28} />
-        <Stack size={28} />
-        <Exit size={28} />
+        <IconButton>
+          <Home3 size={28} onClick={handleClick(1)} />
+        </IconButton>
+        <IconButton>
+          <Stack size={28} onClick={handleClick(2)} />
+        </IconButton>
+        <IconButton>
+          <Exit size={28} onClick={handleClick(3)} />
+        </IconButton>
       </StyledFooter>
     </IconStyleWrapper>
   );

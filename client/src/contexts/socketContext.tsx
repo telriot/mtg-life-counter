@@ -1,7 +1,7 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import { TUser, TRoom, TRoomsData } from "../types/index";
-
+import { useAppDispatch } from "./appContext";
 type Action =
   | { type: "assignSocket"; payload: any }
   | { type: "resetSocket" }
@@ -91,7 +91,7 @@ const SocketProvider = ({ children }: { children: any }) => {
     rooms: [],
     myUserProfile: undefined,
   });
-
+  const appDispatch = useAppDispatch();
   React.useEffect(() => {
     socket.current = socketIOClient("/");
     socketDispatch({ type: "assignSocket", payload: socket.current });
@@ -109,6 +109,7 @@ const SocketProvider = ({ children }: { children: any }) => {
     socket.current.on("roomJoined", (data: TUser) => {
       //console.log("roomJoined", data);
       socketDispatch({ type: "setUserProfile", payload: data });
+      appDispatch({ type: "setActiveTab", payload: 3 });
     });
     socket.current.on("roomData", (data: TRoom) => {
       //console.log("roomData", data);
