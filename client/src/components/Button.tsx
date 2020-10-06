@@ -6,6 +6,7 @@ interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly width?: string;
   readonly fontSize?: string;
   readonly highlighted?: boolean;
+  readonly slim?: boolean;
 }
 
 const StyledButton = styled.button<IButton>`
@@ -22,7 +23,7 @@ const StyledButton = styled.button<IButton>`
       : props.theme.palette.secondary.dark};
   border: none;
   border-radius: 4px;
-  padding: 0.75rem;
+  padding: ${(props) => (props.slim ? "0.25rem 0.75rem" : "0.75rem")};
   font-family: Roboto;
   font-size: ${(props) => (props.fontSize ? props.fontSize : "0.875rem")};
   font-weight: 500;
@@ -52,6 +53,7 @@ function Button({
   onClick,
   width,
   highlighted,
+  slim,
   ...props
 }: IButton) {
   return (
@@ -61,6 +63,7 @@ function Button({
       fullWidth={fullWidth}
       onClick={onClick}
       highlighted={highlighted}
+      slim={slim}
       {...props}
     >
       {children}

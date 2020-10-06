@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import Button from "./Button";
+import Modal from "./Modal";
 import { TRoomsData } from "../types/index";
 const rooms: Array<TRoomsData> = [
   { roomName: "room1", usersLength: 3, maxUsers: 4 },
@@ -26,7 +28,7 @@ const RoomsContainer = styled.div`
 const Divider = styled.div`
   width: 100%;
   height: 1px;
-  background-color: #e7e7e7;
+  background-color: #444;
 `;
 const ListItemDiv = styled.div`
   display: flex;
@@ -41,13 +43,28 @@ const ListText = styled.span`
 `;
 
 const RoomListItem = ({ room, index }: { room: TRoomsData; index: number }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+  const handleClose = () => {
+    setIsOpen(false);
+  };
   return (
     <>
       {index !== 0 && <Divider />}
       <ListItemDiv>
         <ListText>{room.roomName}</ListText>
-        <ListText>{`${room.usersLength}/${room.maxUsers}`}</ListText>
+        {/* <ListText>{`${room.usersLength}/${room.maxUsers}`}</ListText> */}
+        <Button onClick={handleOpen} slim>
+          Join
+        </Button>
       </ListItemDiv>
+      <Modal
+        isOpen={isOpen}
+        handleClose={handleClose}
+        roomName={room.roomName}
+      />
     </>
   );
 };

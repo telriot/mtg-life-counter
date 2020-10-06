@@ -3,8 +3,7 @@ import ActiveRoom from "./components/ActiveRoom";
 import CreateRoomForm from "./components/CreateRoomForm";
 import LandingScreen from "./components/LandingScreen";
 import CreateRoomScreen from "./components/CreateRoomScreen";
-import RoomList from "./components/RoomList";
-import Rooms from "./components/Rooms";
+
 import { useAppState } from "./contexts/appContext";
 import { useSocketState } from "./contexts/socketContext";
 import ActiveRoomScreen from "./components/ActiveRoomScreen";

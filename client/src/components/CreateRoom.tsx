@@ -13,7 +13,7 @@ function CreateRoom() {
   return (
     <div>
       <Button onClick={handleOpen}>Create room</Button>
-      <Modal isOpen={isOpen} handleClose={handleClose} />
+      <Modal roomName="some" isOpen={isOpen} handleClose={handleClose} />
     </div>
   );
 }

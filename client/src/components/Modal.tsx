@@ -1,8 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import CreateRoomForm from "./CreateRoomForm";
-const Container = styled.div`
+import Button from "./Button";
+import TextField from "./TextField";
+import Container from "./Container";
+const ModalContainer = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   height: 100vh;
   width: 100%;
 `;
@@ -15,34 +20,67 @@ const StyledOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   z-index: 10;
 `;
 const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -60%);
   width: 400px;
-  max-width: 100%;
-  height: 300px;
+  max-width: 90%;
+  height: 200px;
   max-height: 100%;
-  background-color: #fff;
+  background-color: ${(props) => props.theme.palette.secondary.dark};
   z-index: 11;
+`;
+const Form = styled.form``;
+const ButtonDiv = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
 `;
 interface IModal {
   isOpen: boolean;
   handleClose: () => void;
+  roomName: string;
 }
-function Modal({ isOpen, handleClose }: IModal) {
+function Modal({ isOpen, handleClose, roomName }: IModal) {
+  const [username, setUsername] = React.useState("");
+  const handleSubmit = () => console.log("subba");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setUsername(e.target.value);
+
   return (
-    <Container style={!isOpen ? { display: "none" } : {}}>
+    <ModalContainer style={!isOpen ? { display: "none" } : {}}>
       <StyledOverlay>
         <StyledModal>
-          <CreateRoomForm handleClose={handleClose} />
+          <Container direction="column" justify="space-around">
+            <TextField
+              placeholder="username"
+              name="username"
+              value={username}
+              handleChange={handleChange}
+            />
+            <ButtonDiv>
+              <Button onClick={handleClose} width="8rem">
+                cancel
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={Boolean(!username || !roomName)}
+                width="8rem"
+                type="submit"
+              >
+                Join
+              </Button>
+            </ButtonDiv>
+          </Container>
         </StyledModal>
       </StyledOverlay>
-    </Container>
+    </ModalContainer>
   );
 }
 
