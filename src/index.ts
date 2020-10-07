@@ -4,11 +4,8 @@ import * as http from "http";
 import express from "express";
 import socketIo from "socket.io";
 import path from "path";
-
 import { onServerError } from "./lib";
 import { indexRouter } from "./routes/index";
-import { roomsRouter } from "./routes/rooms";
-import { usersRouter } from "./routes/users";
 import { TRoom, TUser } from "./types/index";
 export const app = express();
 export const server = http.createServer(app);
@@ -174,8 +171,6 @@ io.on("connection", (socket) => {
 //Mount Routes
 
 app.use("/api", indexRouter);
-app.use("/api/rooms", roomsRouter);
-app.use("/api/users", usersRouter);
 
 // Prepare Production Settings
 
