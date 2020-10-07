@@ -1,7 +1,5 @@
 import express, { Response, Request } from "express";
 import { asyncErrorHandler } from "../middleware/index";
-import { Room } from "../models/Room";
-import { User } from "../models/User";
 const router = express.Router();
 
 /* GET home page. */
