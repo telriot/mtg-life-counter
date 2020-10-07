@@ -10,6 +10,7 @@ import { TRoom, TUser } from "./types/index";
 export const app = express();
 export const server = http.createServer(app);
 const io = socketIo(server);
+
 //Server config
 export const port = process.env.PORT || "5000";
 app.set("port", port);
@@ -39,14 +40,14 @@ io.on("connection", (socket) => {
   let { rooms, users } = store;
   io.emit("updateRoomsData", getRoomsDataObj(rooms));
 
-  socket.on("joinRoom", ({ roomName, username }) => {
+  socket.on("joinRoom", ({ roomName, username, startingLife }) => {
     if (!roomName || !username) return;
 
     socket.join(roomName);
 
     let user = {
       username,
-      life: 40,
+      life: startingLife || 40,
       active: true,
       socketID: socket.id,
       roomName,
@@ -163,7 +164,7 @@ io.on("connection", (socket) => {
           );
         }
         io.emit("updateRoomsData", getRoomsDataObj(rooms));
-      }, 6000);
+      }, 180000);
     }
   });
 });

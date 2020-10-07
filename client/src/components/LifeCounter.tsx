@@ -1,8 +1,8 @@
 import React from "react";
 import { useSocketState, useSocketDispatch } from "../contexts/socketContext";
-import Button from "./Button";
 import styled from "styled-components";
 import { Minus, Plus } from "@styled-icons/icomoon";
+import Button from "./Button";
 
 const StyledPlus = styled(Plus)`
   color: inherit;
@@ -10,6 +10,7 @@ const StyledPlus = styled(Plus)`
 const StyledMinus = styled(Minus)`
   color: inherit;
 `;
+
 function LifeCounter() {
   const dispatch = useSocketDispatch();
   const state = useSocketState();
@@ -26,11 +27,13 @@ function LifeCounter() {
       username: state.myUserProfile?.username,
     });
   };
+
   const ButtonsDiv = styled.div`
     display: flex;
     justify-content: space-between;
     width: 200px;
   `;
+
   return (
     <ButtonsDiv>
       <Button onClick={handleLifeChange(-1)} width="80px">

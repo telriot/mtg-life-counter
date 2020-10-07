@@ -1,9 +1,11 @@
 import React from "react";
-import styled from "styled-components";
 import { TRoom, TUser } from "../types/index";
+import styled from "styled-components";
 
 interface ICardContainerProps {
   readonly userNumber?: number;
+  readonly index: number;
+  readonly lastUsersIndex?: number;
 }
 
 const CardContainer = styled.div<ICardContainerProps>`
@@ -11,10 +13,16 @@ const CardContainer = styled.div<ICardContainerProps>`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  border-left: 1px solid grey;
-  border-right: 1px solid grey;
-  border-bottom: 2px solid
+  border-left: ${(props) =>
+    props.index ? `3px solid ${props.theme.palette.secondary.dark}` : "none"};
+  border-right: ${(props) =>
+    props.index !== props.lastUsersIndex
+      ? `3px solid ${props.theme.palette.secondary.dark}`
+      : "none"};
+  border-bottom: 8px solid
     ${(props) => props.theme.palette.players[`p${props.userNumber}`]};
+  background-color: ${(props) => props.theme.palette.secondary.main};
+
   flex: 1;
 `;
 const OpponentName = styled.span`
@@ -35,16 +43,24 @@ const OpponentLife = styled.span`
 function OpponentCard({
   playerData,
   joinedRoom,
+  index,
 }: {
   playerData?: TUser;
   joinedRoom?: TRoom;
+  index: number;
 }) {
   const userNumber = joinedRoom?.users.findIndex(
     (user) => playerData?.username === user.username
   );
 
+  const lastUsersIndex = (joinedRoom?.users.length || 0) - 2;
+
   return (
-    <CardContainer userNumber={userNumber}>
+    <CardContainer
+      index={index}
+      userNumber={userNumber}
+      lastUsersIndex={lastUsersIndex}
+    >
       <OpponentName>{playerData?.username}</OpponentName>
       <OpponentLife>{playerData?.life}</OpponentLife>
     </CardContainer>

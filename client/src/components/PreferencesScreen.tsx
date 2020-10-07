@@ -1,32 +1,69 @@
 import React from "react";
-import Button from "./Button";
-import Container from "./Container";
-import Footer from "./Footer";
 import { useAppDispatch, useAppState } from "../contexts/appContext";
 import styled from "styled-components";
+import Button from "./Button";
+import Container from "./Container";
+import TextField from "./TextField";
 
 const Header = styled.span`
   margin: 0 0 2rem;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 500;
   text-transform: uppercase;
   color: ${(props) => props.theme.palette.text.primary};
   text-align: center;
+`;
+const UsernameDiv = styled.div`
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
 `;
 const ButtonDiv = styled.div`
   margin-bottom: 1.5rem;
 `;
 
 function PreferencesScreen() {
-  const { startingLife } = useAppState();
   const dispatch = useAppDispatch();
+  const { startingLife } = useAppState();
+  const [username, setUsername] = React.useState("");
+
+  React.useEffect(() => {
+    const storedUsername = localStorage.getItem("lifeCounterUsername");
+    console.log(localStorage);
+    storedUsername && setUsername(storedUsername);
+  }, []);
+
   const handleClick = (num: number) => () => {
-    console.log("clicked");
     dispatch({ type: "setStartingLife", payload: num });
+    localStorage.setItem("startingLife", num.toString());
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    localStorage.setItem("lifeCounterUsername", username);
+  };
+
   const startingTotals = [20, 25, 30, 40];
+
   return (
     <Container direction="column">
+      <UsernameDiv>
+        <Header>Your Username</Header>
+        <TextField
+          placeholder="username"
+          name="username"
+          value={username}
+          handleChange={handleChange}
+          margin="0 0 1rem 0"
+        />
+        <Button disabled={Boolean(!username)} fullWidth onClick={handleSubmit}>
+          Update
+        </Button>
+      </UsernameDiv>
+
       <Header>Life starts at</Header>
       {startingTotals.map((total) => (
         <ButtonDiv>
@@ -40,8 +77,6 @@ function PreferencesScreen() {
           </Button>
         </ButtonDiv>
       ))}
-
-      <Footer />
     </Container>
   );
 }

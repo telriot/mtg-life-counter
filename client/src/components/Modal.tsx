@@ -1,9 +1,10 @@
 import React from "react";
+import { useAppState } from "../contexts/appContext";
+import { useSocketState } from "../contexts/socketContext";
 import styled from "styled-components";
 import Button from "./Button";
-import TextField from "./TextField";
 import Container from "./Container";
-import { useSocketState } from "../contexts/socketContext";
+import TextField from "./TextField";
 
 const ModalContainer = styled.div`
   position: relative;
@@ -50,19 +51,20 @@ interface IModal {
 function Modal({ isOpen, handleClose, roomName }: IModal) {
   const [username, setUsername] = React.useState("");
   const { activeSocket } = useSocketState();
+  const { startingLife } = useAppState();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setUsername(e.target.value);
 
   const handleSubmit = () => {
     localStorage.setItem("lifeCounterUsername", username);
-    activeSocket.emit("joinRoom", { roomName, username });
+    activeSocket.emit("joinRoom", { roomName, username, startingLife });
   };
 
   React.useEffect(() => {
     const storedUsername = localStorage.getItem("lifeCounterUsername");
     storedUsername && setUsername(storedUsername);
   }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setUsername(e.target.value);
 
   return (
     <ModalContainer style={!isOpen ? { display: "none" } : {}}>

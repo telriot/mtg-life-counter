@@ -13,40 +13,47 @@ const StyledContainer = styled.div`
   flex-direction: ${(props) => props.direction};
   justify-content: ${(props) => props.justify};
   align-items: ${(props) => props.align};
+  background: ${(props) => props.background};
+  height: ${(props) => props.height};
 `;
 
 interface IContainerProps {
   maxWidth?: string | number;
+  align?: "stretch" | "center" | "start" | "end";
+  background?: string;
   children: React.ReactFragment;
   direction?: "row" | "row-reverse" | "column" | "column-reverse";
+  height?: string;
   justify?:
     | "start"
     | "center"
     | "space-between"
     | "space-around"
     | "space-evenly";
-  align?: "stretch" | "center" | "start" | "end";
+
   margin?: string;
-  as?: string;
   theme?: any;
 }
 
 function Container({
-  maxWidth,
+  align = "stretch",
+  background = "inherit",
   children,
   direction = "row",
+  height = "",
   justify = "start",
-  align = "stretch",
   margin = "auto",
-  as,
+  maxWidth,
 }: IContainerProps) {
   return (
     <StyledContainer
-      maxWidth={maxWidth}
-      direction={direction}
-      justify={justify}
       align={align}
+      background={background}
+      direction={direction}
+      height={height}
+      justify={justify}
       margin={margin}
+      maxWidth={maxWidth}
     >
       {children}
     </StyledContainer>

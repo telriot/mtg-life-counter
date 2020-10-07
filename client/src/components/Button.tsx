@@ -48,22 +48,22 @@ const StyledButton = styled.button<IButton>`
 
 function Button({
   children,
-  fullWidth,
   fontSize,
-  onClick,
-  width,
+  fullWidth,
   highlighted,
+  onClick,
   slim,
+  width,
   ...props
 }: IButton) {
   return (
     <StyledButton
-      width={width}
       fontSize={fontSize}
       fullWidth={fullWidth}
-      onClick={onClick}
       highlighted={highlighted}
+      onClick={onClick}
       slim={slim}
+      width={width}
       {...props}
     >
       {children}

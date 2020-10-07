@@ -4,65 +4,34 @@ import { TUser, TRoom, TRoomsData } from "../types/index";
 import { useAppDispatch } from "./appContext";
 type Action =
   | { type: "assignSocket"; payload: any }
+  | { type: "leaveRoom" }
   | { type: "resetSocket" }
-  | { type: "updateAll"; payload: any }
-  | { type: "setUserProfile"; payload: any }
   | { type: "setLifeTotal"; payload: number }
-  | { type: "updateRoomsData"; payload: Array<TRoomsData> }
+  | { type: "setUserProfile"; payload: any }
+  | { type: "updateAll"; payload: any }
   | { type: "updateJoinedRoom"; payload: TRoom }
-  | { type: "leaveRoom" };
+  | { type: "updateRoomsData"; payload: Array<TRoomsData> };
 
 type Dispatch = (action: Action) => void;
 
 type State = {
-  status: string;
   activeSocket: any;
-  rooms: Array<TRoomsData>;
-  users: Array<TUser>;
-  myUserProfile?: TUser;
   joinedRoom?: TRoom;
+  myUserProfile?: TUser;
+  rooms: Array<TRoomsData>;
+  status: string;
+  users: Array<TUser>;
 };
 
-const SocketStateContext = React.createContext<State | undefined>(undefined);
 const SocketDispatchContext = React.createContext<Dispatch | undefined>(
   undefined
 );
+const SocketStateContext = React.createContext<State | undefined>(undefined);
 
 const socketReducer = (state: State, action: Action) => {
   switch (action.type) {
-    case "updateAll": {
-      return {
-        ...state,
-        rooms: action.payload.rooms,
-        users: action.payload.users,
-      };
-    }
     case "assignSocket": {
       return { ...state, activeSocket: action.payload };
-    }
-    case "resetSocket": {
-      return { ...state, activeSocket: "undefined" };
-    }
-    case "setUserProfile": {
-      return { ...state, myUserProfile: action.payload };
-    }
-    case "setLifeTotal": {
-      return {
-        ...state,
-        myUserProfile: { ...state.myUserProfile, life: action.payload },
-      };
-    }
-    case "updateRoomsData": {
-      return {
-        ...state,
-        rooms: action.payload,
-      };
-    }
-    case "updateJoinedRoom": {
-      return {
-        ...state,
-        joinedRoom: action.payload,
-      };
     }
     case "leaveRoom": {
       return {
@@ -75,6 +44,38 @@ const socketReducer = (state: State, action: Action) => {
         joinedRoom: undefined,
       };
     }
+    case "resetSocket": {
+      return { ...state, activeSocket: "undefined" };
+    }
+    case "setLifeTotal": {
+      return {
+        ...state,
+        myUserProfile: { ...state.myUserProfile, life: action.payload },
+      };
+    }
+    case "setUserProfile": {
+      return { ...state, myUserProfile: action.payload };
+    }
+
+    case "updateAll": {
+      return {
+        ...state,
+        rooms: action.payload.rooms,
+        users: action.payload.users,
+      };
+    }
+    case "updateJoinedRoom": {
+      return {
+        ...state,
+        joinedRoom: action.payload,
+      };
+    }
+    case "updateRoomsData": {
+      return {
+        ...state,
+        rooms: action.payload,
+      };
+    }
     default: {
       return state;
     }
@@ -82,38 +83,36 @@ const socketReducer = (state: State, action: Action) => {
 };
 
 const SocketProvider = ({ children }: { children: any }) => {
+  const appDispatch = useAppDispatch();
   let socket: any = React.useRef();
 
   const [socketState, socketDispatch] = React.useReducer(socketReducer, {
-    status: "idle",
     activeSocket: undefined,
-    users: [],
-    rooms: [],
-    myUserProfile: undefined,
     joinedRoom: undefined,
+    myUserProfile: undefined,
+    rooms: [],
+    status: "idle",
+    users: [],
   });
-  const appDispatch = useAppDispatch();
+
   React.useEffect(() => {
     socket.current = socketIOClient("/");
+
     socketDispatch({ type: "assignSocket", payload: socket.current });
     socket.current.on("FromAPI", (data: any) => {
-      //console.log("From API", data);
       socketDispatch({ type: "updateAll", payload: data });
     });
     socket.current.on("updateRoomsData", (data: any) => {
-      //console.log("updateRoomsData", data);
       socketDispatch({ type: "updateRoomsData", payload: data });
     });
     socket.current.on("message", (data: any) => {
       console.log("individual message", data);
     });
     socket.current.on("roomJoined", (data: TUser) => {
-      //console.log("roomJoined", data);
       socketDispatch({ type: "setUserProfile", payload: data });
       appDispatch({ type: "setActiveTab", payload: 3 });
     });
     socket.current.on("roomData", (data: TRoom) => {
-      //console.log("roomData", data);
       socketDispatch({ type: "updateJoinedRoom", payload: data });
     });
     return () => {

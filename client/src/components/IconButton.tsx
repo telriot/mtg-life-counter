@@ -5,19 +5,20 @@ interface IIconButton extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 const StyledIconButton = styled.button<IIconButton>`
   display: flex;
-  background-color: transparent;
+  justify-content: center;
   border: none;
   border-radius: 100px;
   padding: 0.75rem;
-  justify-content: center;
   align-items: center;
-  transition: background-color 0.2s;
-  outline: none;
-  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
+  background-color: transparent;
   color: ${(props) =>
     props.disabled
       ? props.theme.palette.secondary.dark
       : props.theme.palette.primary.main};
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
+  outline: none;
+  transition: background-color 0.2s;
+
   &:hover,
   &:focus {
     background-color: rgba(0, 0, 0, 0.1);

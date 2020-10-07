@@ -1,13 +1,13 @@
 import React from "react";
+import { useAppDispatch } from "../contexts/appContext";
 import Button from "./Button";
 import Container from "./Container";
 import RoomDisplay from "./RoomDisplay";
-import Footer from "./Footer";
-import { useAppDispatch } from "../contexts/appContext";
+
 function LandingScreen() {
   const dispatch = useAppDispatch();
+
   const handleClick = () => {
-    console.log("clicked");
     dispatch({ type: "setActiveTab", payload: 4 });
   };
   return (
@@ -16,7 +16,6 @@ function LandingScreen() {
         Create a room
       </Button>
       <RoomDisplay />
-      <Footer />
     </Container>
   );
 }

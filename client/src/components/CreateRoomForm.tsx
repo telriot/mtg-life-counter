@@ -1,9 +1,10 @@
 import React from "react";
-import styled from "styled-components";
-import TextField from "./TextField";
-import Button from "./Button";
+import { useAppState } from "../contexts/appContext";
 import { useSocketState } from "../contexts/socketContext";
-const Form = styled.form``;
+import styled from "styled-components";
+import Button from "./Button";
+import TextField from "./TextField";
+
 interface ICreateRoomForm {
   handleClose?: () => void;
 }
@@ -13,7 +14,7 @@ function CreateRoomForm({ handleClose }: ICreateRoomForm) {
   const [roomName, setRoomName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const { activeSocket } = useSocketState();
-
+  const { startingLife } = useAppState();
   React.useEffect(() => {
     const storedUsername = localStorage.getItem("lifeCounterUsername");
     console.log(localStorage);
@@ -40,11 +41,11 @@ function CreateRoomForm({ handleClose }: ICreateRoomForm) {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     localStorage.setItem("lifeCounterUsername", username);
-    activeSocket.emit("joinRoom", { roomName, username });
+    activeSocket.emit("joinRoom", { roomName, username, startingLife });
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <TextField
         placeholder="username"
         name="username"
@@ -66,7 +67,7 @@ function CreateRoomForm({ handleClose }: ICreateRoomForm) {
       >
         Submit
       </Button>
-    </Form>
+    </form>
   );
 }
 

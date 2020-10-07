@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 interface IInputDivProps {
   isFocused: boolean;
+  margin: string;
 }
 interface ITextDecoratorProps {
   isFocused: boolean;
@@ -10,7 +11,7 @@ interface ITextDecoratorProps {
 const InputDiv = styled.div<IInputDivProps>`
   position: relative;
   display: "flex";
-  margin-bottom: 2.5rem;
+  margin: ${(props) => props.margin};
   display: flex;
   padding: 0 1rem;
   transition: background 0.2s;
@@ -60,8 +61,14 @@ interface ITextField extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  margin?: string;
 }
-function TextField({ placeholder, handleChange, ...props }: ITextField) {
+function TextField({
+  margin = "0 0 2.5rem 0",
+  placeholder,
+  handleChange,
+  ...props
+}: ITextField) {
   const [isFocused, setIsFocused] = React.useState(false);
   const handleFocus = () => {
     setIsFocused(true);
@@ -71,7 +78,7 @@ function TextField({ placeholder, handleChange, ...props }: ITextField) {
   };
   return (
     <>
-      <InputDiv isFocused={isFocused}>
+      <InputDiv isFocused={isFocused} margin={margin}>
         <TextBox>
           <Input
             onFocus={handleFocus}

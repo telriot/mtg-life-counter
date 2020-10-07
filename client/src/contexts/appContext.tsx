@@ -39,9 +39,13 @@ const appReducer = (state: State, action: Action) => {
 };
 
 const AppProvider = ({ children }: { children: any }) => {
+  const storedStartingLife = localStorage.getItem("startingLife")
+    ? ~~localStorage.getItem("startingLife")!
+    : 40;
+
   const [appState, appDispatch] = React.useReducer(appReducer, {
     activeTab: 1,
-    startingLife: 40,
+    startingLife: storedStartingLife || 40,
   });
 
   return (
