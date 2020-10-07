@@ -13,15 +13,20 @@ const StyledIconButton = styled.button<IIconButton>`
   align-items: center;
   transition: background-color 0.2s;
   outline: none;
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
+  color: ${(props) =>
+    props.disabled
+      ? props.theme.palette.secondary.dark
+      : props.theme.palette.primary.main};
   &:hover,
   &:focus {
     background-color: rgba(0, 0, 0, 0.1);
   }
 `;
 
-function IconButton({ children, onClick, ...props }: IIconButton) {
+function IconButton({ children, disabled, onClick, ...props }: IIconButton) {
   return (
-    <StyledIconButton onClick={onClick} {...props}>
+    <StyledIconButton disabled={disabled} onClick={onClick} {...props}>
       {children}
     </StyledIconButton>
   );

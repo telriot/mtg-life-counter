@@ -1,5 +1,4 @@
 import React from "react";
-import { useAppDispatch } from "../contexts/appContext";
 import styled from "styled-components";
 import Container from "./Container";
 import CreateRoomForm from "./CreateRoomForm";
@@ -13,8 +12,6 @@ const Header = styled.h1`
   text-align: center;
 `;
 function CreateRoomScreen() {
-  const dispatch = useAppDispatch();
-
   return (
     <Container direction="column">
       <Header>NEW ROOM</Header>

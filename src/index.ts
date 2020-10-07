@@ -72,7 +72,6 @@ const getRoomsDataObj = (rooms: Array<TRoom>) =>
 //SERVER
 io.on("connection", (socket) => {
   let { rooms, users } = store;
-
   io.emit("updateRoomsData", getRoomsDataObj(rooms));
 
   socket.on("joinRoom", ({ roomName, username }) => {
@@ -140,10 +139,13 @@ io.on("connection", (socket) => {
       (user) => user.socketID !== socketID
     );
     if (requestedRoom.users.length < 1) {
-      rooms = rooms.filter((room) => room.name !== roomName);
+      const roomIndex = rooms.findIndex((room) => room.name === roomName);
+      rooms.splice(roomIndex, 1);
     }
+
     socket.leave(roomName);
-    io.to(roomName).emit("roomData", requestedRoom);
+    if (requestedRoom.users.length)
+      io.to(roomName).emit("roomData", requestedRoom);
     io.emit("updateRoomsData", getRoomsDataObj(rooms));
   });
 
@@ -167,28 +169,37 @@ io.on("connection", (socket) => {
     if (!requestedUser) return;
 
     requestedUser.active = false;
+    if (requestedRoom.users.length < 2) {
+      const userIndex = users.findIndex(
+        (user) => user.username === loggedOutUser!.username
+      );
+      users.splice(userIndex, 1);
 
-    setTimeout(() => {
-      if (!loggedOutUser?.active) {
-        users = users.filter(
-          (user) => user.username !== loggedOutUser!.username
-        );
-
-        let requestedRoom = rooms.find(
-          (room) => room.name === loggedOutUser?.roomName
-        );
-        if (!requestedRoom) return;
-
-        requestedRoom.users = requestedRoom.users.filter(
-          (user) => user.username !== loggedOutUser?.username
-        );
-        if (requestedRoom.users.length < 1) {
-          rooms = rooms.filter((room) => room.name !== requestedRoom?.name);
-        }
-      }
-
+      const roomIndex = rooms.findIndex(
+        (room) => room.name === requestedRoom?.name
+      );
+      rooms.splice(roomIndex, 1);
       io.emit("updateRoomsData", getRoomsDataObj(rooms));
-    }, 6000);
+    } else {
+      setTimeout(() => {
+        if (!loggedOutUser?.active) {
+          const userIndex = users.findIndex(
+            (user) => user.username === loggedOutUser!.username
+          );
+          users.splice(userIndex, 1);
+
+          let requestedRoom = rooms.find(
+            (room) => room.name === loggedOutUser?.roomName
+          );
+          if (!requestedRoom) return;
+
+          requestedRoom.users = requestedRoom.users.filter(
+            (user) => user.username !== loggedOutUser?.username
+          );
+        }
+        io.emit("updateRoomsData", getRoomsDataObj(rooms));
+      }, 6000);
+    }
   });
 });
 

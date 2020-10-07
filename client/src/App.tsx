@@ -1,15 +1,10 @@
 import React from "react";
-import ActiveRoom from "./components/ActiveRoom";
-import CreateRoomForm from "./components/CreateRoomForm";
 import LandingScreen from "./components/LandingScreen";
 import CreateRoomScreen from "./components/CreateRoomScreen";
-
 import { useAppState } from "./contexts/appContext";
-import { useSocketState } from "./contexts/socketContext";
 import ActiveRoomScreen from "./components/ActiveRoomScreen";
 import PreferencesScreen from "./components/PreferencesScreen";
 function App() {
-  const socketState = useSocketState();
   const { activeTab } = useAppState();
   return (
     <>

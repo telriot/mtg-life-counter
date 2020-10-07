@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Button from "./Button";
 import TextField from "./TextField";
 import Container from "./Container";
+import { useSocketState } from "../contexts/socketContext";
+
 const ModalContainer = styled.div`
   position: relative;
   display: flex;
@@ -35,7 +37,6 @@ const StyledModal = styled.div`
   background-color: ${(props) => props.theme.palette.secondary.dark};
   z-index: 11;
 `;
-const Form = styled.form``;
 const ButtonDiv = styled.div`
   display: flex;
   width: 100%;
@@ -48,7 +49,16 @@ interface IModal {
 }
 function Modal({ isOpen, handleClose, roomName }: IModal) {
   const [username, setUsername] = React.useState("");
-  const handleSubmit = () => console.log("subba");
+  const { activeSocket } = useSocketState();
+
+  const handleSubmit = () => {
+    localStorage.setItem("lifeCounterUsername", username);
+    activeSocket.emit("joinRoom", { roomName, username });
+  };
+  React.useEffect(() => {
+    const storedUsername = localStorage.getItem("lifeCounterUsername");
+    storedUsername && setUsername(storedUsername);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUsername(e.target.value);

@@ -90,6 +90,7 @@ const SocketProvider = ({ children }: { children: any }) => {
     users: [],
     rooms: [],
     myUserProfile: undefined,
+    joinedRoom: undefined,
   });
   const appDispatch = useAppDispatch();
   React.useEffect(() => {
@@ -119,7 +120,7 @@ const SocketProvider = ({ children }: { children: any }) => {
       socket.current.disconnect();
       socketDispatch({ type: "resetSocket" });
     };
-  }, []);
+  }, [appDispatch]);
 
   return (
     <SocketStateContext.Provider value={socketState}>

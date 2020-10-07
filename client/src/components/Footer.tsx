@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { Home3, Stack, Exit } from "@styled-icons/icomoon";
+import { Home3, Stack, Exit, Pacman } from "@styled-icons/icomoon";
 import { StyledIconBase } from "@styled-icons/styled-icon";
 import { useAppDispatch } from "../contexts/appContext";
 import IconButton from "./IconButton";
+import { useSocketDispatch, useSocketState } from "../contexts/socketContext";
 export const IconStyleWrapper = styled.div`
   ${StyledIconBase} {
-    color: white;
+    color: inherit;
   }
 `;
 const StyledFooter = styled.footer`
@@ -22,21 +23,35 @@ const StyledFooter = styled.footer`
 `;
 
 function Footer() {
+  const { activeSocket, joinedRoom, myUserProfile } = useSocketState();
   const dispatch = useAppDispatch();
-  const handleClick = (num: number) => () => {
+  const socketDispatch = useSocketDispatch();
+  const handleSelection = (num: number) => () => {
     dispatch({ type: "setActiveTab", payload: num });
   };
+  const handleExit = () => {
+    activeSocket.emit("leaveRoom", {
+      roomName: joinedRoom?.name,
+      socketID: myUserProfile?.socketID,
+    });
+    socketDispatch({ type: "leaveRoom" });
+    dispatch({ type: "setActiveTab", payload: 1 });
+  };
+
   return (
     <IconStyleWrapper>
       <StyledFooter>
-        <IconButton>
-          <Home3 size={28} onClick={handleClick(1)} />
+        <IconButton onClick={handleSelection(1)}>
+          <Home3 size={28} />
         </IconButton>
-        <IconButton>
-          <Stack size={28} onClick={handleClick(2)} />
+        <IconButton onClick={handleSelection(2)}>
+          <Stack size={28} />
         </IconButton>
-        <IconButton>
-          <Exit size={28} onClick={handleClick(3)} />
+        <IconButton disabled={!joinedRoom} onClick={handleSelection(3)}>
+          <Pacman size={28} />
+        </IconButton>
+        <IconButton disabled={!joinedRoom} onClick={handleExit}>
+          <Exit size={28} />
         </IconButton>
       </StyledFooter>
     </IconStyleWrapper>

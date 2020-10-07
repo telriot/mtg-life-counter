@@ -3,13 +3,14 @@ import styled from "styled-components";
 import Button from "./Button";
 import Modal from "./Modal";
 import { TRoomsData } from "../types/index";
-const rooms: Array<TRoomsData> = [
-  { roomName: "room1", usersLength: 3, maxUsers: 4 },
-  { roomName: "room1", usersLength: 3, maxUsers: 4 },
-  { roomName: "room1", usersLength: 3, maxUsers: 4 },
-  { roomName: "room1", usersLength: 3, maxUsers: 4 },
-  { roomName: "room1", usersLength: 3, maxUsers: 4 },
-];
+import { useSocketState } from "../contexts/socketContext";
+// const rooms: Array<TRoomsData> = [
+//   { roomName: "room1", usersLength: 3, maxUsers: 4 },
+//   { roomName: "room1", usersLength: 3, maxUsers: 4 },
+//   { roomName: "room1", usersLength: 3, maxUsers: 4 },
+//   { roomName: "room1", usersLength: 3, maxUsers: 4 },
+//   { roomName: "room1", usersLength: 3, maxUsers: 4 },
+// ];
 const DisplayBox = styled.div`
   background-color: ${(props) => props.theme.palette.secondary.main};
   width: 100%;
@@ -41,9 +42,16 @@ const ListText = styled.span`
   color: ${(props) => props.theme.palette.text.primary};
   padding: 0 12px;
 `;
+const WarningText = styled.p`
+  font-size: 1.625rem;
+  color: ${(props) => props.theme.palette.text.primary};
+  padding: 0 12px;
+  text-align: center;
+`;
 
 const RoomListItem = ({ room, index }: { room: TRoomsData; index: number }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { joinedRoom } = useSocketState();
   const handleOpen = () => {
     setIsOpen(true);
   };
@@ -56,9 +64,11 @@ const RoomListItem = ({ room, index }: { room: TRoomsData; index: number }) => {
       <ListItemDiv>
         <ListText>{room.roomName}</ListText>
         {/* <ListText>{`${room.usersLength}/${room.maxUsers}`}</ListText> */}
-        <Button onClick={handleOpen} slim>
-          Join
-        </Button>
+        {!joinedRoom && (
+          <Button onClick={handleOpen} slim>
+            Join
+          </Button>
+        )}
       </ListItemDiv>
       <Modal
         isOpen={isOpen}
@@ -70,14 +80,19 @@ const RoomListItem = ({ room, index }: { room: TRoomsData; index: number }) => {
 };
 
 function RoomDisplay() {
+  const { rooms } = useSocketState();
   return (
     <DisplayBox>
       <RoomsContainer>
-        {rooms.map((room, i) => (
-          <>
-            <RoomListItem room={room} index={i} />
-          </>
-        ))}
+        {rooms.length ? (
+          rooms.map((room, i) => (
+            <>
+              <RoomListItem room={room} index={i} />
+            </>
+          ))
+        ) : (
+          <WarningText>There's nobody here!</WarningText>
+        )}
       </RoomsContainer>
     </DisplayBox>
   );

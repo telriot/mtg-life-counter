@@ -6,48 +6,48 @@ import { useSocketState } from "../contexts/socketContext";
 import OpponentCard from "./OpponentCard";
 import ActivePlayerMain from "./ActivePlayerMain";
 
-const joinedRoom: TRoom = {
-  name: "TestRoom",
-  users: [
-    {
-      username: "TestUser1",
-      life: 27,
-      active: true,
-      socketID: "12345460",
-      roomName: "TestRoom",
-    },
-    {
-      username: "TestUser2",
-      life: 7,
-      active: true,
-      socketID: "12345461",
-      roomName: "TestRoom",
-    },
-    {
-      username: "TestUser3",
-      life: 17,
-      active: true,
-      socketID: "12345462",
-      roomName: "TestRoom",
-    },
-    {
-      username: "TestUser4",
-      life: 17,
-      active: true,
-      socketID: "123454621",
-      roomName: "TestRoom",
-    },
-  ],
-  maxUsers: 4,
-  password: "test",
-};
-const myUserProfile = {
-  username: "TestUser1",
-  life: 27,
-  active: true,
-  socketID: "12345460",
-  roomName: "TestRoom",
-};
+// const joinedRoom: TRoom = {
+//   name: "TestRoom",
+//   users: [
+//     {
+//       username: "TestUser1",
+//       life: 27,
+//       active: true,
+//       socketID: "12345460",
+//       roomName: "TestRoom",
+//     },
+//     {
+//       username: "TestUser2",
+//       life: 7,
+//       active: true,
+//       socketID: "12345461",
+//       roomName: "TestRoom",
+//     },
+//     {
+//       username: "TestUser3",
+//       life: 17,
+//       active: true,
+//       socketID: "12345462",
+//       roomName: "TestRoom",
+//     },
+//     {
+//       username: "TestUser4",
+//       life: 17,
+//       active: true,
+//       socketID: "123454621",
+//       roomName: "TestRoom",
+//     },
+//   ],
+//   maxUsers: 4,
+//   password: "test",
+// };
+// const myUserProfile = {
+//   username: "TestUser1",
+//   life: 27,
+//   active: true,
+//   socketID: "12345460",
+//   roomName: "TestRoom",
+// };
 
 const Grid = styled.div`
   height: 100vh;
@@ -63,7 +63,7 @@ const OpponentsDiv = styled.div`
 `;
 
 function ActiveRoomScreen() {
-  //const { joinedRoom, myUserProfile } = useSocketState();
+  const { joinedRoom, myUserProfile } = useSocketState();
 
   const opponents = joinedRoom?.users.filter(
     (user) => user.username !== myUserProfile?.username
