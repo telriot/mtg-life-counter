@@ -37,7 +37,7 @@ const RoomListItem = ({ room, index }: { room: TRoomsData; index: number }) => {
       <ListItemDiv>
         <ListText>{room.roomName}</ListText>
         <div>
-          <ListText>{`${room.usersLength}/${room.maxUsers}`}</ListText>
+          {/* <ListText>{`${room.usersLength}/${room.maxUsers}`}</ListText> */}
           {!joinedRoom && (
             <Button onClick={handleOpen} slim>
               Join
