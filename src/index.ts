@@ -4,9 +4,7 @@ import * as http from "http";
 import express from "express";
 import socketIo from "socket.io";
 import path from "path";
-import mongoose from "mongoose";
-import session from "express-session";
-import { default as connectMongo } from "connect-mongo";
+
 import { onServerError } from "./lib";
 import { indexRouter } from "./routes/index";
 import { roomsRouter } from "./routes/rooms";
@@ -15,7 +13,6 @@ import { TRoom, TUser } from "./types/index";
 export const app = express();
 export const server = http.createServer(app);
 const io = socketIo(server);
-const MongoStore = connectMongo(session);
 //Server config
 export const port = process.env.PORT || "5000";
 app.set("port", port);
@@ -23,35 +20,6 @@ app.set("port", port);
 server.listen(port);
 server.on("error", onServerError);
 server.on("listening", () => console.log("Server is running on port " + port));
-
-//Connect to the DB
-mongoose.connect(
-  process.env.MONGO_URI || `mongodb://localhost:27017/life-counter-app`,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function () {
-  console.log("DB Connected");
-});
-mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
-// Setup public assets directory
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
-// Sessions
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET!,
-    resave: false,
-    saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: db }),
-  })
-);
 
 // Web Socket Server
 

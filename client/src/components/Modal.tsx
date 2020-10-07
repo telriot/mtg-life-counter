@@ -55,6 +55,7 @@ function Modal({ isOpen, handleClose, roomName }: IModal) {
     localStorage.setItem("lifeCounterUsername", username);
     activeSocket.emit("joinRoom", { roomName, username });
   };
+
   React.useEffect(() => {
     const storedUsername = localStorage.getItem("lifeCounterUsername");
     storedUsername && setUsername(storedUsername);
