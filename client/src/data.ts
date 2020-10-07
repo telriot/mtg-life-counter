@@ -8,6 +8,7 @@ export const joinedRoom: TRoom = {
       active: true,
       socketID: "12345460",
       roomName: "TestRoom",
+      commanderDamage: {},
     },
     {
       username: "TestUser2",
@@ -15,6 +16,7 @@ export const joinedRoom: TRoom = {
       active: true,
       socketID: "12345461",
       roomName: "TestRoom",
+      commanderDamage: {},
     },
     {
       username: "TestUser3",
@@ -22,6 +24,7 @@ export const joinedRoom: TRoom = {
       active: true,
       socketID: "12345462",
       roomName: "TestRoom",
+      commanderDamage: {},
     },
     {
       username: "TestUser4",
@@ -29,6 +32,7 @@ export const joinedRoom: TRoom = {
       active: true,
       socketID: "123454621",
       roomName: "TestRoom",
+      commanderDamage: {},
     },
   ],
   maxPlayers: 4,
@@ -40,4 +44,5 @@ export const myUserProfile = {
   active: true,
   socketID: "12345460",
   roomName: "TestRoom",
+  commanderDamage: {},
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
+import { myUserProfile } from "../data";
 import { TUser, TRoom, TRoomsData } from "../types/index";
 import { useAppDispatch } from "./appContext";
 type Action =
@@ -10,7 +11,8 @@ type Action =
   | { type: "setUserProfile"; payload: any }
   | { type: "updateAll"; payload: any }
   | { type: "updateJoinedRoom"; payload: TRoom }
-  | { type: "updateRoomsData"; payload: Array<TRoomsData> };
+  | { type: "updateRoomsData"; payload: Array<TRoomsData> }
+  | { type: "updateUserProfile"; payload: any };
 
 type Dispatch = (action: Action) => void;
 
@@ -54,9 +56,21 @@ const socketReducer = (state: State, action: Action) => {
       };
     }
     case "setUserProfile": {
-      return { ...state, myUserProfile: action.payload };
+      return !state.myUserProfile
+        ? { ...state, myUserProfile: action.payload }
+        : { ...state };
     }
 
+    case "updateUserProfile": {
+      return {
+        ...state,
+        myUserProfile: !state.myUserProfile
+          ? action.payload.users[0]
+          : action.payload.users.find(
+              (user: TUser) => user.username === state.myUserProfile?.username
+            ),
+      };
+    }
     case "updateAll": {
       return {
         ...state,
@@ -113,7 +127,9 @@ const SocketProvider = ({ children }: { children: any }) => {
       appDispatch({ type: "setActiveTab", payload: 3 });
     });
     socket.current.on("roomData", (data: TRoom) => {
+      console.log("roomData", data);
       socketDispatch({ type: "updateJoinedRoom", payload: data });
+      socketDispatch({ type: "updateUserProfile", payload: data });
     });
     return () => {
       socket.current.disconnect();

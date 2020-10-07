@@ -4,6 +4,7 @@ export type TUser = {
   active: boolean;
   socketID: string;
   roomName: string;
+  commanderDamage: any;
 };
 export type TRoom = {
   name: string;

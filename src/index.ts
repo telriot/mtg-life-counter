@@ -45,12 +45,13 @@ io.on("connection", (socket) => {
 
     socket.join(roomName);
 
-    let user = {
+    let user: TUser = {
       username,
       life: startingLife || 40,
       active: true,
       socketID: socket.id,
       roomName,
+      commanderDamage: {},
     };
 
     let requestedRoom = rooms.find((room) => room.name === roomName);
@@ -79,6 +80,10 @@ io.on("connection", (socket) => {
       loggedUser.socketID = socket.id;
       io.to(socket.id).emit("roomJoined", loggedUser);
     } else {
+      requestedRoom.users.forEach((u) => {
+        user.commanderDamage[`${u.username}`] = 0;
+        u.commanderDamage[`${user.username}`] = 0;
+      });
       users.push(user);
       requestedRoom.users.push(user);
       io.to(socket.id).emit("roomJoined", user);
@@ -103,12 +108,14 @@ io.on("connection", (socket) => {
     io.to(roomName).emit("roomData", requestedRoom);
   });
 
-  socket.on("leaveRoom", ({ roomName, socketID }) => {
+  socket.on("leaveRoom", ({ roomName, socketID, username }) => {
     let requestedRoom = rooms.find((room) => room.name === roomName);
     if (!requestedRoom) {
       return;
     }
-
+    requestedRoom.users.forEach(
+      (user) => delete user.commanderDamage[username]
+    );
     requestedRoom.users = requestedRoom.users.filter(
       (user) => user.socketID !== socketID
     );
@@ -170,6 +177,11 @@ io.on("connection", (socket) => {
 
           requestedRoom.users = requestedRoom.users.filter(
             (user) => user.username !== loggedOutUser?.username
+          );
+          requestedRoom.users.forEach(
+            (user) =>
+              loggedOutUser &&
+              delete user.commanderDamage[loggedOutUser.username]
           );
         }
         io.emit("updateRoomsData", getRoomsDataObj(rooms));

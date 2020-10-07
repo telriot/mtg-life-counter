@@ -43,6 +43,7 @@ function Footer() {
     activeSocket.emit("leaveRoom", {
       roomName: joinedRoom?.name,
       socketID: myUserProfile?.socketID,
+      username: myUserProfile?.username,
     });
     socketDispatch({ type: "leaveRoom" });
     dispatch({ type: "setActiveTab", payload: 1 });
