@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useSocketState } from "../contexts/socketContext";
 import OpponentCard from "./OpponentCard";
 import ActivePlayerMain from "./ActivePlayerMain";
-import { joinedRoom, myUserProfile } from "../data";
+//import { joinedRoom, myUserProfile } from "../data";
 
 const Grid = styled.div`
   height: 100%;
@@ -19,7 +19,7 @@ const OpponentsDiv = styled.div`
 `;
 
 function ActiveRoomScreen() {
-  //const { joinedRoom, myUserProfile } = useSocketState();
+  const { joinedRoom, myUserProfile } = useSocketState();
 
   const opponents = joinedRoom?.users.filter(
     (user) => user.username !== myUserProfile?.username

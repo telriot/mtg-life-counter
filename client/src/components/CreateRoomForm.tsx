@@ -4,6 +4,7 @@ import { useSocketState } from "../contexts/socketContext";
 import styled from "styled-components";
 import Button from "./Button";
 import TextField from "./TextField";
+import MaxPlayersSelect from "./MaxPlayersSelect";
 
 interface ICreateRoomForm {
   handleClose?: () => void;
@@ -14,10 +15,9 @@ function CreateRoomForm({ handleClose }: ICreateRoomForm) {
   const [roomName, setRoomName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const { activeSocket } = useSocketState();
-  const { startingLife } = useAppState();
+  const { startingLife, maxPlayers } = useAppState();
   React.useEffect(() => {
     const storedUsername = localStorage.getItem("lifeCounterUsername");
-    console.log(localStorage);
     storedUsername && setUsername(storedUsername);
   }, []);
 
@@ -41,7 +41,12 @@ function CreateRoomForm({ handleClose }: ICreateRoomForm) {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     localStorage.setItem("lifeCounterUsername", username);
-    activeSocket.emit("joinRoom", { roomName, username, startingLife });
+    activeSocket.emit("joinRoom", {
+      roomName,
+      username,
+      startingLife,
+      maxPlayers,
+    });
   };
 
   return (
@@ -58,6 +63,7 @@ function CreateRoomForm({ handleClose }: ICreateRoomForm) {
         value={roomName}
         handleChange={handleChange}
       />
+      <MaxPlayersSelect />
       {/* <TextField name="password" value={password} handleChange={handleChange} /> */}
       {/* <Button onClick={handleClose}>Close</Button> */}
       <Button

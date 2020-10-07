@@ -31,7 +31,7 @@ export const joinedRoom: TRoom = {
       roomName: "TestRoom",
     },
   ],
-  maxUsers: 4,
+  maxPlayers: 4,
   password: "test",
 };
 export const myUserProfile = {

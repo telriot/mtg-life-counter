@@ -32,7 +32,7 @@ const getRoomsDataObj = (rooms: Array<TRoom>) =>
   rooms.map((room) => ({
     roomName: room.name,
     usersLength: room.users.length,
-    maxUsers: room.maxUsers,
+    maxPlayers: room.maxPlayers,
   }));
 
 //SERVER
@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
   let { rooms, users } = store;
   io.emit("updateRoomsData", getRoomsDataObj(rooms));
 
-  socket.on("joinRoom", ({ roomName, username, startingLife }) => {
+  socket.on("joinRoom", ({ roomName, username, startingLife, maxPlayers }) => {
     if (!roomName || !username) return;
 
     socket.join(roomName);
@@ -54,9 +54,15 @@ io.on("connection", (socket) => {
     };
 
     let requestedRoom = rooms.find((room) => room.name === roomName);
+
     if (!requestedRoom) {
-      requestedRoom = { name: roomName, users: [] };
+      requestedRoom = { name: roomName, users: [], maxPlayers };
       rooms.push(requestedRoom);
+    }
+
+    if (requestedRoom?.users.length >= maxPlayers) {
+      io.to(socket.id).emit("message", "Players cap reached");
+      return;
     }
 
     let loggedUser = requestedRoom.users.find(
@@ -99,7 +105,9 @@ io.on("connection", (socket) => {
 
   socket.on("leaveRoom", ({ roomName, socketID }) => {
     let requestedRoom = rooms.find((room) => room.name === roomName);
-    if (!requestedRoom) return;
+    if (!requestedRoom) {
+      return;
+    }
 
     requestedRoom.users = requestedRoom.users.filter(
       (user) => user.socketID !== socketID
@@ -110,8 +118,9 @@ io.on("connection", (socket) => {
     }
 
     socket.leave(roomName);
-    if (requestedRoom.users.length)
+    if (requestedRoom.users.length) {
       io.to(roomName).emit("roomData", requestedRoom);
+    }
     io.emit("updateRoomsData", getRoomsDataObj(rooms));
   });
 

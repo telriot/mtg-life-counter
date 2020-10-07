@@ -4,7 +4,7 @@ User connects on loading main page
 
 ROOM
 users:[user]
-maxUsers:number
+maxPlayers:number
 password:string
 
 USER

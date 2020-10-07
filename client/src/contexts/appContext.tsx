@@ -2,6 +2,7 @@ import React from "react";
 
 type Action =
   | { type: "setActiveTab"; payload: number }
+  | { type: "setMaxPlayers"; payload: 2 | 3 | 4 | 5 }
   | {
       type: "setStartingLife";
       payload: number;
@@ -12,6 +13,7 @@ type Dispatch = (action: Action) => void;
 type State = {
   activeTab: number;
   startingLife: number;
+  maxPlayers: number;
 };
 
 const AppStateContext = React.createContext<State | undefined>(undefined);
@@ -23,6 +25,12 @@ const appReducer = (state: State, action: Action) => {
       return {
         ...state,
         activeTab: action.payload,
+      };
+    }
+    case "setMaxPlayers": {
+      return {
+        ...state,
+        maxPlayers: action.payload,
       };
     }
     case "setStartingLife": {
@@ -46,6 +54,7 @@ const AppProvider = ({ children }: { children: any }) => {
   const [appState, appDispatch] = React.useReducer(appReducer, {
     activeTab: 1,
     startingLife: storedStartingLife || 40,
+    maxPlayers: 4,
   });
 
   return (

@@ -8,11 +8,11 @@ export type TUser = {
 export type TRoom = {
   name: string;
   users: Array<TUser>;
-  maxUsers?: number;
+  maxPlayers?: number;
   password?: string;
 };
 export type TRoomsData = {
   roomName: string;
   usersLength: number;
-  maxUsers: number;
+  maxPlayers: number;
 };

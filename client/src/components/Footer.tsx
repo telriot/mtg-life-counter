@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Home3, Stack, Exit, Pacman } from "@styled-icons/icomoon";
 import { StyledIconBase } from "@styled-icons/styled-icon";
 import IconButton from "./IconButton";
-import { joinedRoom, myUserProfile } from "../data";
+//import { joinedRoom, myUserProfile } from "../data";
 
 export const IconStyleWrapper = styled.div`
   ${StyledIconBase} {
@@ -30,8 +30,8 @@ const IconDiv = styled.div`
   justify-content: space-around;
 `;
 function Footer() {
-  //const { activeSocket, joinedRoom, myUserProfile } = useSocketState();
-  const { activeSocket } = useSocketState();
+  const { activeSocket, joinedRoom, myUserProfile } = useSocketState();
+  //const { activeSocket } = useSocketState();
   const dispatch = useAppDispatch();
   const socketDispatch = useSocketDispatch();
 

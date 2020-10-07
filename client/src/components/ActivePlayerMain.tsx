@@ -3,7 +3,7 @@ import { TUser } from "../types/index";
 import { useSocketState } from "../contexts/socketContext";
 import styled from "styled-components";
 import LifeCounter from "./LifeCounter";
-import { joinedRoom } from "../data";
+//import { joinedRoom } from "../data";
 
 interface IHiglightProps {
   userNumber?: number;
@@ -43,7 +43,7 @@ const ActivePlayerLife = styled.span`
 `;
 
 function ActivePlayerMain({ playerData }: { playerData?: TUser }) {
-  //const { joinedRoom } = useSocketState();
+  const { joinedRoom } = useSocketState();
 
   const userNumber = joinedRoom?.users.findIndex(
     (user) => playerData?.username === user.username
