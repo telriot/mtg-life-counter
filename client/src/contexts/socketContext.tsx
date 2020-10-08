@@ -1,8 +1,8 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
-import { myUserProfile } from "../data";
 import { TUser, TRoom, TRoomsData } from "../types/index";
 import { useAppDispatch } from "./appContext";
+import { joinedRoom as mockRoom, myUserProfile as mockProfile } from "../data";
 type Action =
   | { type: "assignSocket"; payload: any }
   | { type: "leaveRoom" }
@@ -10,6 +10,10 @@ type Action =
   | { type: "setLifeTotal"; payload: number }
   | { type: "setUserProfile"; payload: any }
   | { type: "updateAll"; payload: any }
+  | {
+      type: "updateCommanderDamage";
+      payload: { username: string; damage: number };
+    }
   | { type: "updateJoinedRoom"; payload: TRoom }
   | { type: "updateRoomsData"; payload: Array<TRoomsData> }
   | { type: "updateUserProfile"; payload: any };
@@ -60,22 +64,23 @@ const socketReducer = (state: State, action: Action) => {
         ? { ...state, myUserProfile: action.payload }
         : { ...state };
     }
-
-    case "updateUserProfile": {
-      return {
-        ...state,
-        myUserProfile: !state.myUserProfile
-          ? action.payload.users[0]
-          : action.payload.users.find(
-              (user: TUser) => user.username === state.myUserProfile?.username
-            ),
-      };
-    }
     case "updateAll": {
       return {
         ...state,
         rooms: action.payload.rooms,
         users: action.payload.users,
+      };
+    }
+    case "updateCommanderDamage": {
+      return {
+        ...state,
+        myUserProfile: {
+          ...state.myUserProfile,
+          commanderDamage: {
+            ...state.myUserProfile?.commanderDamage,
+            [action.payload.username]: action.payload.damage,
+          },
+        },
       };
     }
     case "updateJoinedRoom": {
@@ -90,6 +95,16 @@ const socketReducer = (state: State, action: Action) => {
         rooms: action.payload,
       };
     }
+    case "updateUserProfile": {
+      return {
+        ...state,
+        myUserProfile: !state.myUserProfile
+          ? action.payload.users[0]
+          : action.payload.users.find(
+              (user: TUser) => user.username === state.myUserProfile?.username
+            ),
+      };
+    }
     default: {
       return state;
     }
@@ -99,19 +114,21 @@ const socketReducer = (state: State, action: Action) => {
 const SocketProvider = ({ children }: { children: any }) => {
   const appDispatch = useAppDispatch();
   let socket: any = React.useRef();
-
+  const isTesting = false;
   const [socketState, socketDispatch] = React.useReducer(socketReducer, {
-    activeSocket: undefined,
-    joinedRoom: undefined,
-    myUserProfile: undefined,
-    rooms: [],
+    activeSocket: isTesting ? "testingsocket" : undefined,
+    joinedRoom: isTesting ? mockRoom : undefined,
+    myUserProfile: isTesting ? mockProfile : undefined,
+    rooms: isTesting
+      ? [{ roomName: "TestRoom", usersLength: 4, maxPlayers: 5 }]
+      : [],
     status: "idle",
-    users: [],
+    users: isTesting ? mockRoom.users : [],
   });
 
   React.useEffect(() => {
     socket.current = socketIOClient("/");
-
+    console.log(socket);
     socketDispatch({ type: "assignSocket", payload: socket.current });
     socket.current.on("FromAPI", (data: any) => {
       socketDispatch({ type: "updateAll", payload: data });

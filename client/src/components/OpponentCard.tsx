@@ -1,7 +1,8 @@
 import React from "react";
 import { TRoom, TUser } from "../types/index";
 import styled from "styled-components";
-
+import { getUserNumber } from "../lib/helpers";
+import OppCmdDmgSection from "./OppCmdDmgSection";
 interface ICardContainerProps {
   readonly userNumber?: number;
   readonly index: number;
@@ -20,7 +21,7 @@ const CardContainer = styled.div<ICardContainerProps>`
       ? `3px solid ${props.theme.palette.secondary.dark}`
       : "none"};
   border-bottom: 8px solid
-    ${(props) => props.theme.palette.players[`p${props.userNumber}`]};
+    ${(props) => props.theme.palette.players[`p${props.userNumber}`].main};
   background-color: ${(props) => props.theme.palette.secondary.main};
 
   flex: 1;
@@ -49,9 +50,7 @@ function OpponentCard({
   joinedRoom?: TRoom;
   index: number;
 }) {
-  const userNumber = joinedRoom?.users.findIndex(
-    (user) => playerData?.username === user.username
-  );
+  const userNumber = getUserNumber(playerData?.username, joinedRoom?.users);
 
   const lastUsersIndex = (joinedRoom?.users.length || 0) - 2;
 
@@ -63,6 +62,7 @@ function OpponentCard({
     >
       <OpponentName>{playerData?.username}</OpponentName>
       <OpponentLife>{playerData?.life}</OpponentLife>
+      <OppCmdDmgSection opponent={playerData} />
     </CardContainer>
   );
 }

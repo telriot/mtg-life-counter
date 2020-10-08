@@ -18,10 +18,10 @@ const theme: DefaultTheme = {
       tertiary: "#6e6e6e",
     },
     players: {
-      p0: "#F8E067",
-      p1: "#40C035",
-      p2: "#4E91F6",
-      p3: "#CA4DA7",
+      p0: { main: "#F8E067", dark: "#ffd500" },
+      p1: { main: "#40C035", dark: "#0fbf00" },
+      p2: { main: "#4E91F6", dark: "#0065fc" },
+      p3: { main: "#CA4DA7", dark: "#d10097" },
     },
   },
   typography: {

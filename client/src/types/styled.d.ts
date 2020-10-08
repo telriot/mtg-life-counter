@@ -27,7 +27,7 @@ declare module "styled-components" {
       primary: TPaletteScheme;
       secondary: TPaletteScheme;
       text: TPaletteText;
-      players: Object<string>;
+      players: any;
     };
 
     typography: {

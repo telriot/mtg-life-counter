@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useSocketState } from "../contexts/socketContext";
 import OpponentCard from "./OpponentCard";
 import ActivePlayerMain from "./ActivePlayerMain";
+import CmdDmgSection from "./CmdDmgSection";
 //import { joinedRoom, myUserProfile } from "../data";
 
 const Grid = styled.div`
@@ -10,8 +11,8 @@ const Grid = styled.div`
   width: 100%;
   display: grid;
   grid-template-rows:
-    [top opponents-start]1fr [opponents-end main-start]2fr[main-end
-    opponents-toggle-start]1fr[opponents-toggle-start end];
+    [top opponents-start]1fr [opponents-end main-start]1.75fr[main-end
+    opponents-toggle-start]1.25fr[opponents-toggle-end end];
 `;
 const OpponentsDiv = styled.div`
   display: flex;
@@ -39,6 +40,7 @@ function ActiveRoomScreen() {
           ))}
         </OpponentsDiv>
         <ActivePlayerMain playerData={myUserProfile} />
+        <CmdDmgSection opponents={opponents} />
       </Grid>
     </>
   );
