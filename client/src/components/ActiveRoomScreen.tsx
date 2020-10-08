@@ -35,11 +35,10 @@ function ActiveRoomScreen() {
               key={`opponent-card-${i}`}
               index={i}
               playerData={opponent}
-              joinedRoom={joinedRoom}
             />
           ))}
         </OpponentsDiv>
-        <ActivePlayerMain playerData={myUserProfile} />
+        <ActivePlayerMain />
         <CmdDmgSection opponents={opponents} />
       </Grid>
     </>

@@ -109,6 +109,10 @@ io.on("connection", (socket) => {
     if (!requestedUser) return;
 
     requestedUser.life = life;
+    // io.to(roomName).emit("roomDataExcludeSender", {
+    //   room: requestedRoom,
+    //   sender: requestedUser,
+    // });
     io.to(roomName).emit("roomData", requestedRoom);
   });
   socket.on(
@@ -124,9 +128,27 @@ io.on("connection", (socket) => {
       if (!requestedUser) return;
       requestedUser.commanderDamage[cmdDmgUsername] = cmdDmgDamage;
       requestedUser.life = life;
+
       io.to(roomName).emit("roomData", requestedRoom);
     }
   );
+  socket.on("resetLifeAndCmdDmg", ({ roomName, username, startingLife }) => {
+    let requestedRoom = rooms.find((room) => room.name === roomName);
+    if (!requestedRoom) return;
+    let requestedUser = requestedRoom?.users.find(
+      (user) => user.username === username
+    );
+    if (!requestedUser) return;
+    let commanderDamageResetObj: any = {};
+    Object.entries(requestedUser.commanderDamage).forEach(
+      ([username, damage]) => {
+        commanderDamageResetObj[username] = 0;
+      }
+    );
+    requestedUser.commanderDamage = commanderDamageResetObj;
+    requestedUser.life = startingLife;
+    io.to(roomName).emit("roomData", requestedRoom);
+  });
   socket.on("leaveRoom", ({ roomName, socketID, username }) => {
     if (!roomName || !socketID || !username) return;
 
@@ -169,7 +191,7 @@ io.on("connection", (socket) => {
     let requestedRoom = rooms.find(
       (room) => room.name === loggedOutUser?.roomName
     );
-    //IF ROOM HAS BEEN DEELETED, RETURN
+    //IF ROOM HAS BEEN DELETED, RETURN
     if (!requestedRoom) return;
 
     let requestedUser = requestedRoom.users.find(
@@ -194,7 +216,7 @@ io.on("connection", (socket) => {
       io.emit("updateRoomsData", getRoomsDataObj(rooms));
     } else {
       //ELSE IF OTHER USERS ARE IN, START TIMEOUT BEFOR LOGGING OUT
-      io.emit("updateRoomsData", getRoomsDataObj(rooms));
+      io.emit("roomData", requestedRoom);
 
       setTimeout(() => {
         if (!loggedOutUser?.active) {

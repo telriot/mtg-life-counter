@@ -22,3 +22,6 @@ WS: emit new rooms
 WS: to room: emit new user stats
 
 CL: listen to api changes
+
+
+FIND A WAY TO EMIT ONLY OUTSIDE ON LIFE CHANGES

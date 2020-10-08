@@ -5,7 +5,6 @@ import styled from "styled-components";
 import LifeCounter from "./LifeCounter";
 import { getUserNumber } from "../lib/helpers";
 import { useAppState } from "../contexts/appContext";
-//import { joinedRoom } from "../data";
 
 interface IHiglightProps {
   userNumber?: number;
@@ -88,7 +87,7 @@ const ActivePlayerLife = styled.span<IActivePlayerLifeProps>`
   }
 `;
 
-function ActivePlayerMain({ playerData }: { playerData?: TUser }) {
+function ActivePlayerMain() {
   const { joinedRoom, activeSocket, myUserProfile } = useSocketState();
   const dispatch = useSocketDispatch();
   const { startingLife } = useAppState();
@@ -101,26 +100,32 @@ function ActivePlayerMain({ playerData }: { playerData?: TUser }) {
   };
   const handleClick = () => {
     if (!resetOpen) return;
-    dispatch({
-      type: "setLifeTotal",
-      payload: startingLife,
-    });
-    activeSocket.emit("setLifeTotal", {
-      roomName: myUserProfile?.roomName,
-      socketID: activeSocket.id,
-      life: startingLife,
+    // dispatch({
+    //   type: "setLifeTotal",
+    //   payload: startingLife,
+    // });
+    dispatch({ type: "resetLifeAndCmdDmg", payload: startingLife });
+    activeSocket.emit("resetLifeAndCmdDmg", {
+      roomName: joinedRoom?.name,
       username: myUserProfile?.username,
+      startingLife,
     });
+    // activeSocket.emit("setLifeTotal", {
+    //   roomName: myUserProfile?.roomName,
+    //   socketID: activeSocket.id,
+    //   life: startingLife,
+    //   username: myUserProfile?.username,
+    // });
     setResetOpen(false);
   };
   return (
     <ActivePlayerContainer>
       <UsernameDiv>
-        <ActivePlayerName active={playerData?.active}>
-          {playerData?.username}
+        <ActivePlayerName active={myUserProfile?.active}>
+          {myUserProfile?.username}
         </ActivePlayerName>
         <Highlight
-          userNumber={getUserNumber(playerData?.username, joinedRoom?.users)}
+          userNumber={getUserNumber(myUserProfile?.username, joinedRoom?.users)}
         />
       </UsernameDiv>
       <LifeDiv
@@ -132,8 +137,8 @@ function ActivePlayerMain({ playerData }: { playerData?: TUser }) {
         {resetOpen ? (
           <ResetText>reset</ResetText>
         ) : (
-          <ActivePlayerLife active={playerData?.active}>
-            {playerData?.life}
+          <ActivePlayerLife active={myUserProfile?.active}>
+            {myUserProfile?.life}
           </ActivePlayerLife>
         )}
       </LifeDiv>

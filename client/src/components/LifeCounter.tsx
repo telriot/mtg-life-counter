@@ -11,6 +11,11 @@ const StyledPlus = styled(Plus)`
 const StyledMinus = styled(Minus)`
   color: inherit;
 `;
+const ButtonsDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 200px;
+`;
 
 function LifeCounter() {
   const dispatch = useSocketDispatch();
@@ -33,12 +38,6 @@ function LifeCounter() {
       username: state.myUserProfile?.username,
     });
   };
-
-  const ButtonsDiv = styled.div`
-    display: flex;
-    justify-content: space-between;
-    width: 200px;
-  `;
 
   return (
     <ButtonsDiv>

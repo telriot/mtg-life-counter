@@ -7,6 +7,7 @@ type Action =
   | { type: "assignSocket"; payload: any }
   | { type: "leaveRoom" }
   | { type: "resetSocket" }
+  | { type: "resetLifeAndCmdDmg"; payload: number }
   | { type: "setLifeTotal"; payload: number }
   | { type: "setUserProfile"; payload: any }
   | { type: "updateAll"; payload: any }
@@ -50,6 +51,25 @@ const socketReducer = (state: State, action: Action) => {
         joinedRoom: undefined,
       };
     }
+    case "resetLifeAndCmdDmg": {
+      let commanderDamageResetObj: any = {};
+      Object.entries(state.myUserProfile?.commanderDamage).forEach(
+        ([username, damage]) => {
+          commanderDamageResetObj[username] = 0;
+        }
+      );
+
+      return {
+        ...state,
+
+        myUserProfile: {
+          ...state.myUserProfile,
+          life: action.payload,
+          commanderDamage: commanderDamageResetObj,
+        },
+      };
+    }
+
     case "resetSocket": {
       return { ...state, activeSocket: "undefined" };
     }
@@ -71,6 +91,7 @@ const socketReducer = (state: State, action: Action) => {
         users: action.payload.users,
       };
     }
+
     case "updateCommanderDamage": {
       return {
         ...state,
@@ -83,6 +104,7 @@ const socketReducer = (state: State, action: Action) => {
         },
       };
     }
+
     case "updateJoinedRoom": {
       return {
         ...state,
@@ -144,10 +166,18 @@ const SocketProvider = ({ children }: { children: any }) => {
       appDispatch({ type: "setActiveTab", payload: 3 });
     });
     socket.current.on("roomData", (data: TRoom) => {
-      console.log("roomData", data);
       socketDispatch({ type: "updateJoinedRoom", payload: data });
-      socketDispatch({ type: "updateUserProfile", payload: data });
+      //socketDispatch({ type: "updateUserProfile", payload: data });
     });
+    // socket.current.on(
+    //   "roomDataExcludeSender",
+    //   ({ room, sender }: { room: TRoom; sender: TUser }) => {
+    //     console.log("ROOM", room, "SENDER", sender);
+
+    //     const filteredUsers=room.users.filter(user=>user.username!==sender.username)
+
+    //   }
+    // );
     return () => {
       socket.current.disconnect();
       socketDispatch({ type: "resetSocket" });

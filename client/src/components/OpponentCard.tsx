@@ -1,8 +1,10 @@
 import React from "react";
 import { TRoom, TUser } from "../types/index";
+import { useSocketState } from "../contexts/socketContext";
 import styled from "styled-components";
-import { getUserNumber } from "../lib/helpers";
 import OppCmdDmgSection from "./OppCmdDmgSection";
+import { getUserNumber } from "../lib/helpers";
+
 interface ICardContainerProps {
   readonly userNumber?: number;
   readonly index: number;
@@ -14,6 +16,7 @@ interface IOpponentNameProps {
 interface IOpponentLifeProps {
   active?: boolean;
 }
+
 const CardContainer = styled.div<ICardContainerProps>`
   display: flex;
   flex-direction: column;
@@ -52,19 +55,16 @@ const OpponentLife = styled.span<IOpponentLifeProps>`
       : props.theme.palette.secondary.light};
 `;
 
-function OpponentCard({
-  playerData,
-  joinedRoom,
-  index,
-}: {
+interface IOpponentCard {
   playerData?: TUser;
-  joinedRoom?: TRoom;
   index: number;
-}) {
+}
+
+function OpponentCard({ playerData, index }: IOpponentCard) {
+  const { joinedRoom } = useSocketState();
+
   const userNumber = getUserNumber(playerData?.username, joinedRoom?.users);
-
   const lastUsersIndex = (joinedRoom?.users.length || 0) - 2;
-
   return (
     <CardContainer
       index={index}
