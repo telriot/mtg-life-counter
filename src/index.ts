@@ -194,6 +194,8 @@ io.on("connection", (socket) => {
       io.emit("updateRoomsData", getRoomsDataObj(rooms));
     } else {
       //ELSE IF OTHER USERS ARE IN, START TIMEOUT BEFOR LOGGING OUT
+      io.emit("updateRoomsData", getRoomsDataObj(rooms));
+
       setTimeout(() => {
         if (!loggedOutUser?.active) {
           const userIndex = users.findIndex(

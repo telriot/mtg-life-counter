@@ -8,7 +8,12 @@ interface ICardContainerProps {
   readonly index: number;
   readonly lastUsersIndex?: number;
 }
-
+interface IOpponentNameProps {
+  active?: boolean;
+}
+interface IOpponentLifeProps {
+  active?: boolean;
+}
 const CardContainer = styled.div<ICardContainerProps>`
   display: flex;
   flex-direction: column;
@@ -26,19 +31,25 @@ const CardContainer = styled.div<ICardContainerProps>`
 
   flex: 1;
 `;
-const OpponentName = styled.span`
+const OpponentName = styled.span<IOpponentNameProps>`
   font-family: Roboto;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.05rem;
   text-transform: uppercase;
-  color: ${(props) => props.theme.palette.text.primary};
+  color: ${(props) =>
+    props.active
+      ? props.theme.palette.text.primary
+      : props.theme.palette.secondary.light};
 `;
-const OpponentLife = styled.span`
+const OpponentLife = styled.span<IOpponentLifeProps>`
   font-family: Roboto;
   font-size: 2.5rem;
   font-weight: 500;
-  color: ${(props) => props.theme.palette.text.primary};
+  color: ${(props) =>
+    props.active
+      ? props.theme.palette.text.primary
+      : props.theme.palette.secondary.light};
 `;
 
 function OpponentCard({
@@ -60,8 +71,12 @@ function OpponentCard({
       userNumber={userNumber}
       lastUsersIndex={lastUsersIndex}
     >
-      <OpponentName>{playerData?.username}</OpponentName>
-      <OpponentLife>{playerData?.life}</OpponentLife>
+      <OpponentName active={playerData?.active}>
+        {playerData?.username}
+      </OpponentName>
+      <OpponentLife active={playerData?.active}>
+        {playerData?.life}
+      </OpponentLife>
       <OppCmdDmgSection opponent={playerData} />
     </CardContainer>
   );

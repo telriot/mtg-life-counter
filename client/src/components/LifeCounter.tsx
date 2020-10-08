@@ -3,6 +3,7 @@ import { useSocketState, useSocketDispatch } from "../contexts/socketContext";
 import styled from "styled-components";
 import { Minus, Plus } from "@styled-icons/icomoon";
 import Button from "./Button";
+import { useAppState } from "../contexts/appContext";
 
 const StyledPlus = styled(Plus)`
   color: inherit;
@@ -14,16 +15,21 @@ const StyledMinus = styled(Minus)`
 function LifeCounter() {
   const dispatch = useSocketDispatch();
   const state = useSocketState();
+  const { startingLife } = useAppState();
 
   const handleLifeChange = (life: number) => async () => {
     dispatch({
       type: "setLifeTotal",
-      payload: state.myUserProfile ? state.myUserProfile.life + life : 40,
+      payload: state.myUserProfile
+        ? state.myUserProfile.life + life
+        : startingLife,
     });
     state.activeSocket.emit("setLifeTotal", {
       roomName: state.myUserProfile?.roomName,
       socketID: state.activeSocket.id,
-      life: state.myUserProfile ? state.myUserProfile.life + life : 40,
+      life: state.myUserProfile
+        ? state.myUserProfile.life + life
+        : startingLife,
       username: state.myUserProfile?.username,
     });
   };
