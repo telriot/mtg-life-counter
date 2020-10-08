@@ -109,12 +109,10 @@ io.on("connection", (socket) => {
     if (!requestedUser) return;
 
     requestedUser.life = life;
-    // io.to(roomName).emit("roomDataExcludeSender", {
-    //   room: requestedRoom,
-    //   sender: requestedUser,
-    // });
+
     io.to(roomName).emit("roomData", requestedRoom);
   });
+
   socket.on(
     "setCommanderDamage",
     ({ roomName, username, life, cmdDmgUsername, cmdDmgDamage }) => {
@@ -126,12 +124,14 @@ io.on("connection", (socket) => {
         (user) => user.username === username
       );
       if (!requestedUser) return;
+
       requestedUser.commanderDamage[cmdDmgUsername] = cmdDmgDamage;
       requestedUser.life = life;
 
       io.to(roomName).emit("roomData", requestedRoom);
     }
   );
+
   socket.on("resetLifeAndCmdDmg", ({ roomName, username, startingLife }) => {
     let requestedRoom = rooms.find((room) => room.name === roomName);
     if (!requestedRoom) return;
@@ -140,15 +140,14 @@ io.on("connection", (socket) => {
     );
     if (!requestedUser) return;
     let commanderDamageResetObj: any = {};
-    Object.entries(requestedUser.commanderDamage).forEach(
-      ([username, damage]) => {
-        commanderDamageResetObj[username] = 0;
-      }
-    );
+    Object.keys(requestedUser.commanderDamage).forEach((username) => {
+      commanderDamageResetObj[username] = 0;
+    });
     requestedUser.commanderDamage = commanderDamageResetObj;
     requestedUser.life = startingLife;
     io.to(roomName).emit("roomData", requestedRoom);
   });
+
   socket.on("leaveRoom", ({ roomName, socketID, username }) => {
     if (!roomName || !socketID || !username) return;
 

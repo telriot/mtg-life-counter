@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes } from "react";
 import { TUser } from "../types";
-import { getUserNumber } from "../lib/helpers";
 import { useSocketState, useSocketDispatch } from "../contexts/socketContext";
+import { getUserNumber } from "../lib/helpers";
 import styled from "styled-components";
 import { Minus, Plus } from "@styled-icons/icomoon";
 
@@ -28,7 +28,7 @@ const CounterContainer = styled.div`
 const CounterButton = styled.button<ICounterButtonProps>`
   background: ${(props) =>
     props.theme.palette.players[`p${props.userNumber}`].main};
-  color: ${(props) => props.theme.palette.primary.main};
+  color: ${(props) => props.theme.palette.text.primary};
   padding: 0.625rem 0;
   border: none;
   border-radius: 4px;
@@ -53,6 +53,7 @@ const LifeDisplay = styled.span`
   letter-spacing: 0.05rem;
   color: ${(props) => props.theme.palette.primary.main};
 `;
+
 function CmdDmgCounter({ opponent }: { opponent: TUser }) {
   const dispatch = useSocketDispatch();
   const { myUserProfile, joinedRoom, activeSocket } = useSocketState();

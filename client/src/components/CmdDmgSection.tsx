@@ -1,6 +1,5 @@
 import React from "react";
 import { TUser } from "../types/index";
-import { useSocketState } from "../contexts/socketContext";
 import styled from "styled-components";
 import CmdDmgCounter from "./CmdDmgCounter";
 
@@ -11,8 +10,6 @@ const CmdDmgSectionContainer = styled.div`
   align-items: center;
 `;
 function CmdDmgSection({ opponents }: { opponents?: Array<TUser> }) {
-  const { joinedRoom } = useSocketState();
-
   return (
     <CmdDmgSectionContainer>
       {opponents?.map((opponent, i) => (

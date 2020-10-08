@@ -1,5 +1,4 @@
 import React from "react";
-import { TUser } from "../types/index";
 import { useSocketDispatch, useSocketState } from "../contexts/socketContext";
 import styled from "styled-components";
 import LifeCounter from "./LifeCounter";
@@ -100,22 +99,14 @@ function ActivePlayerMain() {
   };
   const handleClick = () => {
     if (!resetOpen) return;
-    // dispatch({
-    //   type: "setLifeTotal",
-    //   payload: startingLife,
-    // });
+
     dispatch({ type: "resetLifeAndCmdDmg", payload: startingLife });
     activeSocket.emit("resetLifeAndCmdDmg", {
       roomName: joinedRoom?.name,
       username: myUserProfile?.username,
       startingLife,
     });
-    // activeSocket.emit("setLifeTotal", {
-    //   roomName: myUserProfile?.roomName,
-    //   socketID: activeSocket.id,
-    //   life: startingLife,
-    //   username: myUserProfile?.username,
-    // });
+
     setResetOpen(false);
   };
   return (

@@ -4,7 +4,6 @@ import { useSocketState } from "../contexts/socketContext";
 import OpponentCard from "./OpponentCard";
 import ActivePlayerMain from "./ActivePlayerMain";
 import CmdDmgSection from "./CmdDmgSection";
-//import { joinedRoom, myUserProfile } from "../data";
 
 const Grid = styled.div`
   height: 100%;

@@ -1,4 +1,4 @@
-import { TRoom, TUser } from "./types/index";
+import { TRoom } from "./types/index";
 export const joinedRoom: TRoom = {
   name: "TestRoom",
   users: [

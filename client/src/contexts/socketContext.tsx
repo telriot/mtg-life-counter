@@ -58,7 +58,6 @@ const socketReducer = (state: State, action: Action) => {
           commanderDamageResetObj[username] = 0;
         }
       );
-
       return {
         ...state,
 
@@ -69,7 +68,6 @@ const socketReducer = (state: State, action: Action) => {
         },
       };
     }
-
     case "resetSocket": {
       return { ...state, activeSocket: "undefined" };
     }
@@ -91,7 +89,6 @@ const socketReducer = (state: State, action: Action) => {
         users: action.payload.users,
       };
     }
-
     case "updateCommanderDamage": {
       return {
         ...state,
@@ -104,7 +101,6 @@ const socketReducer = (state: State, action: Action) => {
         },
       };
     }
-
     case "updateJoinedRoom": {
       return {
         ...state,
@@ -150,7 +146,6 @@ const SocketProvider = ({ children }: { children: any }) => {
 
   React.useEffect(() => {
     socket.current = socketIOClient("/");
-    console.log(socket);
     socketDispatch({ type: "assignSocket", payload: socket.current });
     socket.current.on("FromAPI", (data: any) => {
       socketDispatch({ type: "updateAll", payload: data });
@@ -167,17 +162,7 @@ const SocketProvider = ({ children }: { children: any }) => {
     });
     socket.current.on("roomData", (data: TRoom) => {
       socketDispatch({ type: "updateJoinedRoom", payload: data });
-      //socketDispatch({ type: "updateUserProfile", payload: data });
     });
-    // socket.current.on(
-    //   "roomDataExcludeSender",
-    //   ({ room, sender }: { room: TRoom; sender: TUser }) => {
-    //     console.log("ROOM", room, "SENDER", sender);
-
-    //     const filteredUsers=room.users.filter(user=>user.username!==sender.username)
-
-    //   }
-    // );
     return () => {
       socket.current.disconnect();
       socketDispatch({ type: "resetSocket" });

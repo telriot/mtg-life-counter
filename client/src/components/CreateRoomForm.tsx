@@ -1,7 +1,6 @@
 import React from "react";
 import { useAppState } from "../contexts/appContext";
 import { useSocketState } from "../contexts/socketContext";
-import styled from "styled-components";
 import Button from "./Button";
 import TextField from "./TextField";
 import MaxPlayersSelect from "./MaxPlayersSelect";

@@ -14,7 +14,7 @@ const StyledIconButton = styled.button<IIconButton>`
   color: ${(props) =>
     props.disabled
       ? props.theme.palette.secondary.dark
-      : props.theme.palette.primary.main};
+      : props.theme.palette.text.primary};
   cursor: ${(props) => (props.disabled ? "default" : "pointer")};
   outline: none;
   transition: background-color 0.2s;

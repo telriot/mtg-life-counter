@@ -1,5 +1,5 @@
 import React from "react";
-import { TRoom, TUser } from "../types/index";
+import { TUser } from "../types/index";
 import { useSocketState } from "../contexts/socketContext";
 import styled from "styled-components";
 import OppCmdDmgSection from "./OppCmdDmgSection";

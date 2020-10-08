@@ -19,7 +19,7 @@ const StyledButton = styled.button<IButton>`
       : props.theme.palette.primary.light};
   color: ${(props) =>
     props.highlighted
-      ? props.theme.palette.primary.light
+      ? props.theme.palette.text.primary
       : props.theme.palette.secondary.dark};
   border: none;
   border-radius: 4px;
