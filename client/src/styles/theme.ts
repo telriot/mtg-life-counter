@@ -22,6 +22,7 @@ const theme: DefaultTheme = {
       p1: { main: "#40C035", dark: "#0fbf00" },
       p2: { main: "#4E91F6", dark: "#0065fc" },
       p3: { main: "#CA4DA7", dark: "#d10097" },
+      p4:{main:"#f5a442", dark:"#eb8000"}
     },
   },
 };
