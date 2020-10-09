@@ -19,7 +19,7 @@ const RoomsContainer = styled.div`
   margin: 0 1rem;
 `;
 const WarningText = styled.p`
-  font-size: 1.625rem;
+  font-size: 1.5rem;
   color: ${(props) => props.theme.palette.text.primary};
   padding: 0 12px;
   text-align: center;

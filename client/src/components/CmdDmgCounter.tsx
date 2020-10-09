@@ -97,7 +97,7 @@ function CmdDmgCounter({ opponent }: { opponent: TUser }) {
       </CounterButton>
       <LifeContainer>
         <LifeDisplay>
-          {myUserProfile?.commanderDamage[opponent.username]}
+          {myUserProfile?.commanderDamage[opponent.username]||0}
         </LifeDisplay>
       </LifeContainer>
       <CounterButton

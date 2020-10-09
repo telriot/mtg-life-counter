@@ -10,7 +10,7 @@ const theme: DefaultTheme = {
     },
   },
   palette: {
-    primary: { light: "#fff", main: "#f3f3f3", dark: "#e7e7e7" },
+    primary: { light: "#fff", main: "#f3f3f3", dark: "#c7c7c7" },
     secondary: { light: "#636161", main: "#303030", dark: "#292929" },
     text: {
       primary: "#fff",
@@ -22,81 +22,6 @@ const theme: DefaultTheme = {
       p1: { main: "#40C035", dark: "#0fbf00" },
       p2: { main: "#4E91F6", dark: "#0065fc" },
       p3: { main: "#CA4DA7", dark: "#d10097" },
-    },
-  },
-  typography: {
-    h1: {
-      fontWeight: 300,
-      fontSize: "6rem",
-      lineHeight: 1.167,
-      letterSpacing: "-0.01562em",
-    },
-    h2: {
-      fontWeight: 300,
-      fontSize: "3.75rem",
-      lineHeight: 1.2,
-      letterSpacing: "-0.00833em",
-    },
-    h3: {
-      fontWeight: 400,
-      fontSize: "3rem",
-      lineHeight: 1.167,
-      letterSpacing: "0em",
-    },
-    h4: {
-      fontWeight: 400,
-      fontSize: "2.125rem",
-      lineHeight: 1.235,
-      letterSpacing: "0.00735em",
-    },
-    h5: {
-      fontWeight: 400,
-      fontSize: "1.5rem",
-      lineHeight: 1.334,
-      letterSpacing: "0em",
-    },
-    h6: {
-      fontWeight: 500,
-      fontSize: "1.25rem",
-      lineHeight: 1.6,
-      letterSpacing: "0.0075em",
-    },
-    subtitle1: {
-      fontWeight: 400,
-      fontSize: "1rem",
-      lineHeight: 1.75,
-      letterSpacing: "0.00938em",
-    },
-    subtitle2: {
-      fontWeight: 500,
-      fontSize: "0.875rem",
-      lineHeight: 1.57,
-      letterSpacing: "0.00714em",
-    },
-    body1: {
-      fontWeight: 400,
-      fontSize: "1rem",
-      lineHeight: 1.75,
-      letterSpacing: "0.00938em",
-    },
-    body2: {
-      fontWeight: 400,
-      fontSize: ".875rem",
-      lineHeight: 1.43,
-      letterSpacing: "0.00938em",
-    },
-    button: {
-      fontWeight: 500,
-      fontSize: "0.875rem",
-      lineHeight: 1.75,
-      letterSpacing: "0.02857em",
-      textTransform: "uppercase",
-    },
-    caption: {
-      fontWeight: 400,
-      fontSize: ".75rem",
-      lineHeight: 1.66,
-      letterSpacing: "0.03333em",
     },
   },
 };

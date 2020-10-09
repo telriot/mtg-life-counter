@@ -29,20 +29,5 @@ declare module "styled-components" {
       text: TPaletteText;
       players: any;
     };
-
-    typography: {
-      h1: TTypographyItem;
-      h2: TTypographyItem;
-      h3: TTypographyItem;
-      h4: TTypographyItem;
-      h5: TTypographyItem;
-      h6: TTypographyItem;
-      subtitle1: TTypographyItem;
-      subtitle2: TTypographyItem;
-      body1: TTypographyItem;
-      body2: TTypographyItem;
-      button: TTypographyItem;
-      caption: TTypographyItem;
-    };
   }
 }

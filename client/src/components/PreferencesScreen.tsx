@@ -12,14 +12,23 @@ const Header = styled.span`
   text-transform: uppercase;
   color: ${(props) => props.theme.palette.text.primary};
   text-align: center;
+  ${props=>props.theme.breakpoints.down("sm")}{
+    font-size:1.5rem;
+    margin: 0 0 1rem;
+  }
 `;
 const UsernameDiv = styled.div`
   margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
+  ${props=>props.theme.breakpoints.down("sm")}{  margin-bottom: 1rem;
+}
 `;
 const ButtonDiv = styled.div`
   margin-bottom: 1.5rem;
+  ${props=>props.theme.breakpoints.down("sm")}{  margin-bottom: 1rem;
+}
+
 `;
 
 function PreferencesScreen() {
@@ -29,7 +38,6 @@ function PreferencesScreen() {
 
   React.useEffect(() => {
     const storedUsername = localStorage.getItem("lifeCounterUsername");
-    console.log(localStorage);
     storedUsername && setUsername(storedUsername);
   }, []);
 
