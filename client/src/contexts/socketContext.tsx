@@ -2,13 +2,17 @@ import React from "react";
 import socketIOClient from "socket.io-client";
 import { TUser, TRoom, TRoomsData } from "../types/index";
 import { useAppDispatch } from "./appContext";
-import { joinedRoom as mockRoom, myUserProfile as mockProfile } from "../data";
+import {
+	joinedRoom,
+	joinedRoom as mockRoom,
+	myUserProfile as mockProfile,
+	myUserProfile,
+} from "../data";
 type Action =
 	| { type: "assignSocket"; payload: any }
 	| { type: "leaveRoom" }
 	| { type: "resetSocket" }
 	| { type: "resetLifeAndCmdDmg"; payload: number }
-	| { type: "resetState" }
 	| { type: "setLifeTotal"; payload: number }
 	| { type: "setUserProfile"; payload: any }
 	| { type: "updateAll"; payload: any }
@@ -46,8 +50,10 @@ const socketReducer = (state: State, action: Action) => {
 				...state,
 				myUserProfile: {
 					...state.myUserProfile,
+					username: undefined,
 					roomName: undefined,
 					life: 40,
+					commanderDamage: {},
 				},
 				joinedRoom: undefined,
 			};
@@ -73,16 +79,7 @@ const socketReducer = (state: State, action: Action) => {
 		case "resetSocket": {
 			return { ...state, activeSocket: "undefined" };
 		}
-		case "resetState": {
-			return {
-				activeSocket: undefined,
-				joinedRoom: undefined,
-				myUserProfile: undefined,
-				rooms: [],
-				status: "idle",
-				users: [],
-			};
-		}
+
 		case "setLifeTotal": {
 			return {
 				...state,
@@ -90,9 +87,7 @@ const socketReducer = (state: State, action: Action) => {
 			};
 		}
 		case "setUserProfile": {
-			return !state.myUserProfile
-				? { ...state, myUserProfile: action.payload }
-				: { ...state };
+			return { ...state, myUserProfile: action.payload };
 		}
 		case "updateAll": {
 			return {
@@ -158,31 +153,40 @@ const SocketProvider = ({ children }: { children: any }) => {
 
 	React.useEffect(() => {
 		socket.current = socketIOClient("/");
+
 		socketDispatch({ type: "assignSocket", payload: socket.current });
 		socket.current.on("FromAPI", (data: any) => {
 			socketDispatch({ type: "updateAll", payload: data });
 		});
-		socket.current.on("updateRoomsData", (data: any) => {
-			socketDispatch({ type: "updateRoomsData", payload: data });
-		});
-		socket.current.on("message", (data: any) => {
-			console.log("individual message", data);
-		});
 		socket.current.on("got kicked", () => {
-			socketDispatch({ type: "resetState" });
+			socketDispatch({ type: "leaveRoom" });
+			appDispatch({ type: "setActiveTab", payload: 1 });
 		});
-		socket.current.on("roomJoined", (data: TUser) => {
-			socketDispatch({ type: "setUserProfile", payload: data });
-			appDispatch({ type: "setActiveTab", payload: 3 });
+		socket.current.on("leaveRoom", () => {
+			socketDispatch({ type: "leaveRoom" });
+		});
+		socket.current.on("message", (message: string) => {
+			window.alert(message);
+			console.log("individual message", message);
 		});
 		socket.current.on("roomData", (data: TRoom) => {
+			console.log("roomData", data);
 			socketDispatch({ type: "updateJoinedRoom", payload: data });
+		});
+		socket.current.on("roomJoined", (data: TUser) => {
+			console.log("roomJoined", data);
+
+			appDispatch({ type: "setActiveTab", payload: 3 });
+			socketDispatch({ type: "setUserProfile", payload: data });
+		});
+		socket.current.on("updateRoomsData", (data: any) => {
+			socketDispatch({ type: "updateRoomsData", payload: data });
 		});
 		return () => {
 			socket.current.disconnect();
 			socketDispatch({ type: "resetSocket" });
 		};
-	}, [appDispatch]);
+	}, [appDispatch, socket]);
 
 	return (
 		<SocketStateContext.Provider value={socketState}>

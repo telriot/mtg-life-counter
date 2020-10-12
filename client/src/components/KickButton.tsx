@@ -8,10 +8,15 @@ interface IKickButtonProps {
 function KickButton({ opponent }: IKickButtonProps) {
 	const { joinedRoom, activeSocket } = useSocketState();
 	const handleClick = () => {
-		activeSocket.emit("kickPlayer", {
-			roomName: joinedRoom?.name,
-			username: opponent?.username,
-		});
+		if (
+			window.confirm(`Do you really want to kick ${opponent?.username} out?`)
+		) {
+			activeSocket.emit("kickPlayer", {
+				roomName: joinedRoom?.name,
+				username: opponent?.username,
+				socketID: opponent?.socketID,
+			});
+		}
 	};
 	return (
 		<Button slim onClick={handleClick}>
