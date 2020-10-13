@@ -124,9 +124,7 @@ export const leaveRoom = (
 	if (!roomName || !socketID || !username) return;
 
 	let requestedRoom = rooms.find((room) => room.name === roomName);
-	if (!requestedRoom) {
-		return;
-	}
+	if (!requestedRoom) return;
 	//CLEAR COMMANDER DAMAGE FOR THE ROOM
 	requestedRoom.users.forEach((user) => delete user.commanderDamage[username]);
 	//REMOVE USER FROM ROOM

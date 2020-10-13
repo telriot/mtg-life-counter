@@ -1,8 +1,8 @@
 import store from "../db/index";
-import { Player } from "../classes";
+import { TRoom } from "../types";
 import { getRoomsDataObj } from "../lib/helpers";
 import { IBasicSocketRequest } from "../types/index";
-const { rooms, users } = store;
+const { rooms } = store;
 
 interface ISetLifeTotalObj extends IBasicSocketRequest {
 	life: number;
@@ -12,20 +12,30 @@ interface ISetCommanderDamageObj extends IBasicSocketRequest {
 	cmdDmgUsername: string;
 	cmdDmgDamage: number;
 }
+
+const findRoomAndUser = (
+	rooms: Array<TRoom>,
+	roomName: string,
+	username: string
+) => {
+	let requestedRoom = rooms.find((room) => room.name === roomName);
+	let requestedUser = requestedRoom?.users.find(
+		(user) => user.username === username
+	);
+	return { requestedRoom, requestedUser };
+};
+
 export const setLifeTotal = (
 	io: any,
 	{ roomName, username, life }: ISetLifeTotalObj
 ) => {
 	if (!roomName || !username || !life) return;
-
-	let requestedRoom = rooms.find((room) => room.name === roomName);
-	if (!requestedRoom) return;
-
-	let requestedUser = requestedRoom?.users.find(
-		(user) => user.username === username
+	const { requestedRoom, requestedUser } = findRoomAndUser(
+		rooms,
+		roomName,
+		username
 	);
-	if (!requestedUser) return;
-
+	if (!requestedUser || !requestedUser) return;
 	requestedUser.life = life;
 
 	io.to(roomName).emit("roomData", requestedRoom);
@@ -44,12 +54,12 @@ export const setCommanderDamage = (
 ) => {
 	if (!roomName || !username || !cmdDmgUsername || !cmdDmgDamage) return;
 
-	let requestedRoom = rooms.find((room) => room.name === roomName);
-	if (!requestedRoom) return;
-	let requestedUser = requestedRoom?.users.find(
-		(user) => user.username === username
+	const { requestedRoom, requestedUser } = findRoomAndUser(
+		rooms,
+		roomName,
+		username
 	);
-	if (!requestedUser) return;
+	if (!requestedRoom || !requestedUser) return;
 
 	requestedUser.commanderDamage[cmdDmgUsername] = cmdDmgDamage;
 	requestedUser.life = life;
@@ -61,12 +71,13 @@ export const resetLifeAndCmdDmg = (
 	io: any,
 	{ roomName, username, life }: ISetLifeTotalObj
 ) => {
-	let requestedRoom = rooms.find((room) => room.name === roomName);
-	if (!requestedRoom) return;
-	let requestedUser = requestedRoom?.users.find(
-		(user) => user.username === username
+	const { requestedRoom, requestedUser } = findRoomAndUser(
+		rooms,
+		roomName,
+		username
 	);
-	if (!requestedUser) return;
+	if (!requestedRoom || !requestedUser) return;
+
 	let commanderDamageResetObj: any = {};
 	Object.keys(requestedUser.commanderDamage).forEach((username) => {
 		commanderDamageResetObj[username] = 0;

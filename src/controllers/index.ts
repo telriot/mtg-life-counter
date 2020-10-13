@@ -41,7 +41,7 @@ export const socketDisconnect = (io: any, socket: any) => {
 		//EMIT
 		io.emit("updateRoomsData", getRoomsDataObj(rooms));
 	} else {
-		//ELSE IF OTHER USERS ARE IN, START TIMEOUT BEFOR LOGGING OUT
+		//ELSE IF OTHER USERS ARE IN, START TIMEOUT BEFORE LOGGING OUT
 		io.emit("roomData", requestedRoom);
 
 		setTimeout(() => {
