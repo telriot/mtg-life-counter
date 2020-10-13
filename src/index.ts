@@ -9,7 +9,12 @@ import { indexRouter } from "./routes/index";
 import store from "./db/index";
 import { getRoomsDataObj } from "./lib/helpers";
 import { socketDisconnect } from "./controllers";
-import { createRoom, joinRoom, leaveRoom } from "./controllers/rooms";
+import {
+	createRoom,
+	joinRoom,
+	kickPlayer,
+	leaveRoom,
+} from "./controllers/rooms";
 import {
 	resetLifeAndCmdDmg,
 	setCommanderDamage,
@@ -64,25 +69,9 @@ io.on("connection", (socket) => {
 	socket.on("leaveRoom", ({ roomName, socketID, username }) =>
 		leaveRoom(io, socket, { roomName, socketID, username })
 	);
-	socket.on("kickPlayer", ({ roomName, socketID, username }) => {
-		console.log("starting to kick");
-		if (!roomName || !socketID) return;
-		io.to(socketID).emit("got kicked");
-		let requestedRoom = rooms.find((room) => room.name === roomName);
-		if (!requestedRoom) return;
-		console.log("kick requested room", requestedRoom);
-		//CLEAR COMMANDER DAMAGE FOR THE ROOM
-		requestedRoom.users.forEach(
-			(user) => delete user.commanderDamage[username]
-		);
-		//REMOVE USER
-		requestedRoom.users = requestedRoom.users.filter(
-			(user) => user.socketID !== socketID
-		);
-		console.log("kick complete requested room");
-		io.to(roomName).emit("roomData", requestedRoom);
-		io.emit("updateRoomsData", getRoomsDataObj(rooms));
-	});
+	socket.on("kickPlayer", ({ roomName, socketID, username }) =>
+		kickPlayer(io, socket, { roomName, socketID, username })
+	);
 
 	socket.on("disconnect", () => socketDisconnect(io, socket));
 });

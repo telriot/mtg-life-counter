@@ -2,6 +2,7 @@ import store from "../db/index";
 import { TRoom } from "../types";
 import { getRoomsDataObj } from "../lib/helpers";
 import { IBasicSocketRequest } from "../types/index";
+import { TUser } from "../../client/src/types";
 const { rooms } = store;
 
 interface ISetLifeTotalObj extends IBasicSocketRequest {
@@ -13,14 +14,10 @@ interface ISetCommanderDamageObj extends IBasicSocketRequest {
 	cmdDmgDamage: number;
 }
 
-const findRoomAndUser = (
-	rooms: Array<TRoom>,
-	roomName: string,
-	username: string
-) => {
-	let requestedRoom = rooms.find((room) => room.name === roomName);
+const findRoomAndUser = (rooms: any, roomName: string, username: string) => {
+	let requestedRoom = rooms[roomName];
 	let requestedUser = requestedRoom?.users.find(
-		(user) => user.username === username
+		(user: TUser) => user.username === username
 	);
 	return { requestedRoom, requestedUser };
 };
@@ -30,12 +27,13 @@ export const setLifeTotal = (
 	{ roomName, username, life }: ISetLifeTotalObj
 ) => {
 	if (!roomName || !username || !life) return;
+
 	const { requestedRoom, requestedUser } = findRoomAndUser(
 		rooms,
 		roomName,
 		username
 	);
-	if (!requestedUser || !requestedUser) return;
+	if (!requestedRoom || !requestedUser) return;
 	requestedUser.life = life;
 
 	io.to(roomName).emit("roomData", requestedRoom);
