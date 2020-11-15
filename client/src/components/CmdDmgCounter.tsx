@@ -59,28 +59,30 @@ function CmdDmgCounter({ opponent }: { opponent: TUser }) {
 	const { myUserProfile, joinedRoom, activeSocket } = useSocketState();
 
 	const handleCmdDmgChange = (damage: number, username: string) => async () => {
-		if (!damage || !username || !myUserProfile || !joinedRoom) return;
-		const userCmdDmg = myUserProfile.commanderDamage[username];
+		if (!username || !myUserProfile || !joinedRoom) return;
+		const userCmdDmg = myUserProfile.commanderDamage[username] || 0;
 		if (damage < 0 && userCmdDmg < 1) {
 			return;
 		} else {
+			const updatedLife = myUserProfile.life - damage;
+			const updatedUserCmdDmg = userCmdDmg + damage;
 			dispatch({
 				type: "updateCommanderDamage",
 				payload: {
-					damage: userCmdDmg >= 0 ? userCmdDmg + damage : 0,
+					damage: userCmdDmg >= 0 ? updatedUserCmdDmg : 0,
 					username,
 				},
 			});
 			dispatch({
 				type: "setLifeTotal",
-				payload: myUserProfile.life - damage,
+				payload: updatedLife,
 			});
 			activeSocket.emit("setCommanderDamage", {
 				roomName: joinedRoom.name,
 				username: myUserProfile.username,
-				life: myUserProfile.life - damage,
+				life: updatedLife,
 				cmdDmgUsername: username,
-				cmdDmgDamage: userCmdDmg + damage,
+				cmdDmgDamage: updatedUserCmdDmg,
 			});
 		}
 	};

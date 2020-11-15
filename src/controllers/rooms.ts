@@ -1,6 +1,6 @@
 import store from "../db/index";
 import { Player, Room } from "../classes";
-import { TRoom, TUser } from "../types";
+import { TUser } from "../types";
 import { getRoomsDataObj } from "../lib/helpers";
 import { IBasicSocketRequest } from "../types/index";
 const { rooms, users } = store;
@@ -16,6 +16,11 @@ interface ILeaveRoomObj extends IBasicSocketRequest {
 	socketID: string;
 }
 
+interface IKickRoomObj {
+	roomName: string;
+	socketID: string;
+}
+
 const join = (io: any, socket: any, roomName: string, user: TUser) => {
 	if (!roomName || !user) return;
 
@@ -24,6 +29,7 @@ const join = (io: any, socket: any, roomName: string, user: TUser) => {
 			user.commanderDamage[`${u.username}`] || 0;
 		u.commanderDamage[`${user.username}`] = 0;
 	});
+
 	rooms[roomName].users.push(user);
 	users[socket.id] = roomName;
 	socket.join(roomName);
@@ -138,7 +144,7 @@ export const leaveRoom = (
 export const kickPlayer = (
 	io: any,
 	socket: any,
-	{ roomName, socketID, username }: ILeaveRoomObj
+	{ roomName, socketID }: IKickRoomObj
 ) => {
 	const requestedUser = rooms[roomName].users.find(
 		(user: TUser) => user.socketID === socketID

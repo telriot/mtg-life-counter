@@ -13,7 +13,6 @@ function KickButton({ opponent }: IKickButtonProps) {
 		) {
 			activeSocket.emit("kickPlayer", {
 				roomName: joinedRoom?.name,
-				username: opponent?.username,
 				socketID: opponent?.socketID,
 			});
 		}

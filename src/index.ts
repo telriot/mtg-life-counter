@@ -34,7 +34,7 @@ server.on("listening", () => console.log("Server is running on port " + port));
 
 //SERVER
 io.on("connection", (socket) => {
-	let { rooms, users } = store;
+	let { rooms } = store;
 	io.emit("updateRoomsData", getRoomsDataObj(rooms));
 	socket.on(
 		"createRoom",
@@ -69,8 +69,8 @@ io.on("connection", (socket) => {
 	socket.on("leaveRoom", ({ roomName, socketID, username }) =>
 		leaveRoom(io, socket, { roomName, socketID, username })
 	);
-	socket.on("kickPlayer", ({ roomName, socketID, username }) =>
-		kickPlayer(io, socket, { roomName, socketID, username })
+	socket.on("kickPlayer", ({ roomName, socketID }) =>
+		kickPlayer(io, socket, { roomName, socketID })
 	);
 
 	socket.on("disconnect", () => socketDisconnect(io, socket));

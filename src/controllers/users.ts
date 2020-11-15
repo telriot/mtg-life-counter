@@ -1,5 +1,4 @@
 import store from "../db/index";
-import { TRoom } from "../types";
 import { getRoomsDataObj } from "../lib/helpers";
 import { IBasicSocketRequest } from "../types/index";
 import { TUser } from "../../client/src/types";
@@ -26,7 +25,7 @@ export const setLifeTotal = (
 	io: any,
 	{ roomName, username, life }: ISetLifeTotalObj
 ) => {
-	if (!roomName || !username || !life) return;
+	if (!roomName || !username) return;
 
 	const { requestedRoom, requestedUser } = findRoomAndUser(
 		rooms,
@@ -47,11 +46,11 @@ export const setCommanderDamage = (
 		username,
 		life,
 		cmdDmgUsername,
-		cmdDmgDamage,
+		cmdDmgDamage = 0,
 	}: ISetCommanderDamageObj
 ) => {
-	if (!roomName || !username || !cmdDmgUsername || !cmdDmgDamage) return;
-
+	if (!roomName || !username || !cmdDmgUsername) return;
+	console.log(life, cmdDmgDamage);
 	const { requestedRoom, requestedUser } = findRoomAndUser(
 		rooms,
 		roomName,

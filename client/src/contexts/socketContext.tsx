@@ -2,12 +2,7 @@ import React from "react";
 import socketIOClient from "socket.io-client";
 import { TUser, TRoom, TRoomsData } from "../types/index";
 import { useAppDispatch } from "./appContext";
-import {
-	joinedRoom,
-	joinedRoom as mockRoom,
-	myUserProfile as mockProfile,
-	myUserProfile,
-} from "../data";
+import { joinedRoom as mockRoom, myUserProfile as mockProfile } from "../data";
 type Action =
 	| { type: "assignSocket"; payload: any }
 	| { type: "leaveRoom" }
@@ -60,11 +55,9 @@ const socketReducer = (state: State, action: Action) => {
 		}
 		case "resetLifeAndCmdDmg": {
 			let commanderDamageResetObj: any = {};
-			Object.entries(state.myUserProfile?.commanderDamage).forEach(
-				([username, damage]) => {
-					commanderDamageResetObj[username] = 0;
-				}
-			);
+			Object.keys(state.myUserProfile?.commanderDamage).forEach((username) => {
+				commanderDamageResetObj[username] = 0;
+			});
 			return {
 				...state,
 
@@ -170,12 +163,11 @@ const SocketProvider = ({ children }: { children: any }) => {
 			console.log("individual message", message);
 		});
 		socket.current.on("roomData", (data: TRoom) => {
-			console.log("roomData", data);
+			// console.log("roomData", data);
 			socketDispatch({ type: "updateJoinedRoom", payload: data });
 		});
 		socket.current.on("roomJoined", (data: TUser) => {
-			console.log("roomJoined", data);
-
+			// console.log("roomJoined", data);
 			appDispatch({ type: "setActiveTab", payload: 3 });
 			socketDispatch({ type: "setUserProfile", payload: data });
 		});
